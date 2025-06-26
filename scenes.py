@@ -20,7 +20,6 @@
 #         "location": "cell_block_a",
 #         "items": ["old_key", "rusty_coin"],
 #         "npcs": [],
-#         "music": "ambient_dungeon",
 #         "visited": False
 #     }
 # }
