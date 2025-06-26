@@ -35,4 +35,30 @@
 # }
 
 scenes = {
+    "Opening": {
+    "text": (
+        "You wake up in a dark and dingy cell.\n"
+        "You see a little light in the wall.\n"
+        "you see the light glint off something in the cell.\n\n"
+        "Do you want to look at the hole in the wall or the glint.\n"
+        "wall or glint\n"
+    ),
+    "choices": {
+        "glint": "cell_glint",
+        "wall": "cell_wall"
+    },
+    "metadata": {  # Optional - for future features
+        "location": "cell_block_a",
+        "items": ["old_lamp"],
+        "npcs": [],
+        "visited": False
+    }
+},
+"Stuck": {
+    "text": (
+        "You have stumbled into a dead end\n\n"
+        "THE END - Bad development choice\n"
+    ),
+    "choices": {}  # Empty choices = game ends
+}
 }
