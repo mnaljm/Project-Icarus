@@ -10,7 +10,6 @@ Project Icarus is an interactive text adventure game where players navigate thro
 
 - **Interactive Storytelling**: Navigate through multiple scenes with branching narratives
 - **Choice-Based Gameplay**: Your decisions determine the story path and outcomes
-- **Item Stats**: Items have unique properties like damage, healing, durability, and special abilities
 - **Metadata Tracking**: Scenes track visited locations, available items, and NPCs
 - **Clean Console Interface**: Clear screen functionality for better user experience
 
@@ -21,16 +20,7 @@ Project Icarus is an interactive text adventure game where players navigate thro
    python main.py
    ```
 
-2. **Basic Commands**:
-   - Type your choice when prompted (e.g., "wall", "glint")
-   - `exit` - Quit the game
-   - `inventory` - View your current items
-   - `inspect [item]` - View detailed item information and stats
-   - `use [item]` - Use an item from your inventory
-   - `stats` - View your current player stats
-   - `take [item]` - Pick up items from the environment
-
-3. **Gameplay Tips**:
+2. **Gameplay Tips**:
    - Read scene descriptions carefully for clues
    - Some items can be used multiple times, others are consumable
    - Track your health and light levels
@@ -39,8 +29,8 @@ Project Icarus is an interactive text adventure game where players navigate thro
 
 ## 🛠️ Technical Features
 
-- **Modular Design**: Scenes and items are separated for easy content management
-- **Extensible Framework**: Easy to add new scenes, items, and game mechanics
+- **Modular Design**: Scenes are separated for easy content management
+- **Extensible Framework**: Easy to add new scenes and game mechanics
 - **Error Handling**: Graceful handling of invalid inputs and edge cases
 - **Cross-Platform**: Compatible with Windows, macOS, and Linux
 
@@ -48,7 +38,7 @@ Project Icarus is an interactive text adventure game where players navigate thro
 
 ### Scene System
 - Each scene contains descriptive text and available choices
-- Metadata tracks location, items, NPCs, and visit status
+- Metadata tracks location, NPCs, and visit status
 - Branching narrative with multiple possible outcomes
 
 ## 🔧 Customization
