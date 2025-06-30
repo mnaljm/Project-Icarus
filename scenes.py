@@ -41,7 +41,6 @@ scenes = {
             "The walls are lined with old, peeling wallpaper, and a single flickering light bulb hangs from the ceiling.\n\n"
             "In front of you is a heavy wooden door, slightly ajar, leading to an unknown destination.\n\n"
             "What will you do?\n"
-            #"(open_door)"
         ),
         "choices": {
             "open_door": "Hallway",
@@ -53,7 +52,6 @@ scenes = {
             "At the end of the hallway, you see a staircase leading down into darkness.\n\n"
             "To your left, there is a door slightly ajar, and to your right, another door is closed tightly.\n\n"
             "What will you do?\n"
-            #"(go_down_stairs)"
         ),
         "choices": {
             "go_down_stairs": "Opening",
@@ -61,26 +59,3 @@ scenes = {
         },
     }
 }
-
-def play_game():
-    current_scene = "Opening"
-    
-    while True:
-        scene = scenes[current_scene]
-        print(scene["text"])
-        
-        # Show choices:
-        print("Available choices:")
-        for choice in scene["choices"].keys():
-            print(f"- {choice}")
-        
-        player_choice = input("Enter your choice: ")
-        
-        if player_choice in scene["choices"]:
-            current_scene = scene["choices"][player_choice]
-        else:
-            print("\033[31mInvalid choice you dumbass, pick one of the choices.\033[0m\n")
-
-
-
-play_game()
