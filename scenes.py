@@ -29,10 +29,35 @@
 #     "text": (
 #         "Final scene description.\n"
 #         "Describe the conclusion of this story path.\n\n"
-#         "THE END - [ENDING NAME]"
+#         "THE END - [ENDING NAME]
 #     ),
 #     "choices": {}  # Empty choices = game ends
 # }
 
 scenes = {
+    "Opening": {
+        "text": (
+            "You find yourself in a dimly lit room, the air thick with dust and the faint smell of mildew. "
+            "The walls are lined with old, peeling wallpaper, and a single flickering light bulb hangs from the ceiling.\n\n"
+            "In front of you is a heavy wooden door, slightly ajar, leading to an unknown destination.\n\n"
+            "What will you do?\n"
+            "(open_door)"
+        ),
+        "choices": {
+            "open_door": "Hallway",
+        },
+    },
+    "Hallway": {
+        "text": (
+            "You step into a long, narrow hallway. The walls are lined with faded photographs and the floor creaks under your weight. "
+            "At the end of the hallway, you see a staircase leading down into darkness.\n\n"
+            "To your left, there is a door slightly ajar, and to your right, another door is closed tightly.\n\n"
+            "What will you do?\n"
+            "(go_down_stairs)"
+        ),
+        "choices": {
+            "go_down_stairs": "Opening",
+
+        },
+    }
 }
