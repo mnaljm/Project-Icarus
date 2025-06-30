@@ -1,3 +1,4 @@
+from time import sleep
 from scenes import scenes
 import os
 
@@ -24,5 +25,7 @@ def play_game():
             current_scene = scene["choices"][player_choice]
         else:
             print("\033[31mInvalid choice you dumbass, pick one of the choices.\033[0m\n")
+            input("press enter to try again")
+
 
 play_game()
