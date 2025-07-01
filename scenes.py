@@ -55,7 +55,17 @@ scenes = {
         ),
         "choices": {
             "go_down_stairs": "Opening",
-
         },
-    }
+    },
+    "TutorialCombat": {
+        "text": (
+            "You enter a small room where a training dummy stands in the center. "
+            "A sign on the wall reads: 'Practice your combat skills here.'\n"
+            "You can see a sword and shield lying next to the dummy, ready for you to pick up.\n\n"
+        ),
+        "choices": {
+            "pick_up_sword_and_shield": "CombatTraining",
+            "leave_room": "Hallway"
+        },
+    },
 }
