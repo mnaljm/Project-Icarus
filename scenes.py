@@ -55,23 +55,26 @@ scenes = {
         ),
         "choices": {
             "go_down_stairs": "Opening",
-            "fight": "TutorialCombat",
+            "go_left": "TutorialCombat",
         },
     },
     "TutorialCombat": {
         "text": (
             "You enter a small room where a training dummy stands in the center. "
             "A sign on the wall reads: 'Practice your combat skills here.'\n"
-            "You can see a sword and shield lying next to the dummy, ready for you to pick up.\n\n"
+            "You can see a rusty sword lying next to the dummy, ready for you to pick up.\n\n"
         ),
         "choices": {
-            "pick_up_sword_and_shield": "CombatTraining",
+            "pick_up_sword": "CombatTraining",
             "leave_room": "Hallway"
+        },
+        "metadata": {
+            "items": ["rusty_sword"],
         },
     },
     "CombatTraining": {
         "text": (
-            "You grip the sword and shield firmly. The training dummy stands ready.\n"
+            "You grip the sword firmly. The training dummy stands ready.\n"
             "Prepare to test your skills!\n"
         ),
         "combat": True,

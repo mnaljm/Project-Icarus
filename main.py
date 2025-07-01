@@ -4,18 +4,49 @@ from time import sleep
 # IMPORTS
 
 from scenes import scenes
+from items import items
 import os
 from time import sleep
 from random import randint
-#
+# PLAYER DATA
 player = {
     "hp": 100,
     "damage": 15,
 }
 
+player_inventory=[]
+
 # FUNCTIONS
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def add_item_to_inventory(item_name):
+    #Add an item to player's inventory
+    if item_name in items:
+        player_inventory.append(item_name)
+        item_desc = items[item_name]["description"]
+        print(f"\033[32mYou picked up: {item_name.replace('_', ' ').title()}\033[0m")
+        print(f"\033[36m{item_desc}\033[0m")
+        return True
+    return False
+
+def show_inventory():
+    #Display player's current inventory
+    if not player_inventory:
+        print("\033[33mYour inventory is empty.\033[0m")
+    else:
+        print("\033[36mInventory:\033[0m")
+        for item in player_inventory:
+            item_name = item.replace('_', ' ').title()
+            print(f"- {item_name}")
+
+def handle_special_actions(choice, scene_name):
+    """Handle special actions like picking up items"""
+    if choice == "pick_up_sword" and scene_name == "TutorialCombat":
+        add_item_to_inventory("rusty_sword")
+        input("\nPress Enter to continue...")
+        return False  # Allow scene transition to proceed
+    return False
 
 def roll_die(sides=20):
     #Rolls a single die with 'sides' number of sides.
@@ -105,17 +136,27 @@ def play_game():
         print("Available choices:")
         for choice in scene["choices"].keys():
             print(f"- {choice}")
+
+        #Print the player inventory
+        print("- inventory (check your items)")
         
         player_choice = input("Enter your choice: ")
         
+        if player_choice.lower().strip() in ["inventory", "i"]:
+            show_inventory()
+            input("Press Enter to continue")
+            continue
+
         matched_choice = match_input(player_choice, scene["choices"].keys())
         
         if matched_choice:
+            # Handle special actions before moving to next scene
+            if handle_special_actions(matched_choice, current_scene):
+                continue  # Stay in current scene after special action
             current_scene = scene["choices"][matched_choice]
         else:
 
             input("Press Enter to continue...")
-
 
 # BEGIN GAME LOOP
 play_game()
