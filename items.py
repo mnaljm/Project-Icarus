@@ -30,5 +30,18 @@ items = {
                 "healing": 0
             },
         }
-    }
+    },
+    "rusty_lockpick": {
+        "description": "A rusty lockpick, barely functional but still usable.",
+        "metadata": {
+            "type": "tool",
+            "value": 5,
+            "effects": ["unlock"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
 }
