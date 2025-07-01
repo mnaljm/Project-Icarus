@@ -1,6 +1,3 @@
-
-from time import sleep
-
 # IMPORTS
 
 from scenes import scenes
@@ -8,6 +5,7 @@ from items import items
 import os
 from time import sleep
 from random import randint
+
 # PLAYER DATA
 player = {
     "hp": 100,
@@ -110,8 +108,9 @@ def combat_scene(enemy):
         action = input("Type 'attack' to fight: ").strip().lower()
         
         if action == "attack":
-            enemy["hp"] -= player["damage"]
-            print(f"You hit the {enemy['name']} for {player['damage']} damage! (Enemy HP: {max(enemy['hp'], 0)})")
+            total_damage = get_player_total_damage()
+            enemy["hp"] -= total_damage
+            print(f"You hit the {enemy['name']} for {total_damage} damage! (Enemy HP: {max(enemy['hp'], 0)})")
             
             if enemy["hp"] <= 0:
                 print(f"You defeated the {enemy['name']}! Combat over.\n")
@@ -126,6 +125,20 @@ def combat_scene(enemy):
                 return False
         else:
             print("Invalid action. Please type 'attack'.\n")
+
+def get_player_total_damage():
+    #Calculate total damage including base damage and weapon bonuses
+    total_damage = player["damage"]  # Start with base damage
+    
+    # Add damage from all weapons in inventory
+    for item_name in player_inventory:
+        if item_name in items:
+            item = items[item_name]
+            if item.get("metadata", {}).get("type") == "weapon":
+                weapon_damage = item.get("metadata", {}).get("base_stats", {}).get("damage", 0)
+                total_damage += weapon_damage
+    
+    return total_damage
 
 def play_game():
     clear_screen()
