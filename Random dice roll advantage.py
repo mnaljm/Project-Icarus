@@ -1,3 +1,4 @@
+import random
 def roll_die(sides=20):
     """Ruller en enkelt terning med 'sides' antal sider."""
     return random.randint(1, sides)  # Returnerer et tilfældigt tal mellem 1 og 'sides'

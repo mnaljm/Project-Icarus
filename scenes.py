@@ -43,7 +43,7 @@ scenes = {
             "What will you do?\n"
         ),
         "choices": {
-            "open_door": "Hallway",
+            "open door": "Hallway",
         },
     },
     "Hallway": {
@@ -54,20 +54,26 @@ scenes = {
             "What will you do?\n"
         ),
         "choices": {
-            "go_down_stairs": "Opening",
-            "fight": "TutorialCombat",
+            "go down stairs": "Opening",
+            "go left": "TutorialCombat",
         },
     },
     "TutorialCombat": {
         "text": (
             "You enter a small room where a training dummy stands in the center. "
             "A sign on the wall reads: 'Practice your combat skills here.'\n"
-            "You can see a sword and shield lying next to the dummy, ready for you to pick up.\n\n"
+            "You can see a sword lying next to the dummy, ready for you to pick up.\n"
+            "Pick up by typing 'pick up rusy_sword'.\n\n"
+            "what will you do?\n"
+
         ),
         "choices": {
-            "pick_up_sword_and_shield": "CombatTraining",
-            "leave_room": "Hallway"
+            "prepare for training": "CombatTraining",
+            "leave room": "Hallway"
         },
+        "metadata": {
+            "items": ["rusty_sword"],
+        }
     },
     "CombatTraining": {
         "text": (
