@@ -41,11 +41,29 @@ def show_inventory():
             print(f"- {item_name}")
 
 def handle_special_actions(choice, scene_name):
-    """Handle special actions like picking up items"""
-    if choice == "pick_up_sword" and scene_name == "TutorialCombat":
-        add_item_to_inventory("rusty_sword")
+    #Handle special actions like picking up items
+    # Detect item pickup based on choice name
+    if choice.startswith("pick up "):
+        item_name = choice.replace("pick up ", "")
+    elif choice.startswith("take "):
+        item_name = choice.replace("take ", "")
+    else:
+        return False
+    
+    # Check if the item is available in the current scene's metadata
+    scene = scenes[scene_name]
+    scene_items = scene.get("metadata", {}).get("items", [])
+    
+    if item_name in scene_items:
+        if add_item_to_inventory(item_name):
+            # Remove item from scene metadata so it can't be picked up again
+            scene_items.remove(item_name)
+            input("\nPress Enter to continue...")
+            return False  # Successfully picked up, stay in scene
+    else:
+        print(f"\033[31mThere is no {item_name.replace('_', ' ')} here to pick up.\033[0m")
         input("\nPress Enter to continue...")
-        return False  # Allow scene transition to proceed
+        return True  # Stay in current scene
     return False
 
 def roll_die(sides=20):
@@ -146,6 +164,12 @@ def play_game():
             show_inventory()
             input("Press Enter to continue")
             continue
+
+        # Check for item pickup commands (take/pick up)
+        if player_choice.lower().strip().startswith(("take ", "pick up ")):
+            if handle_special_actions(player_choice.lower().strip(), current_scene):
+                continue  # Stay in current scene after special action
+            continue  # Also continue if item was successfully picked up
 
         matched_choice = match_input(player_choice, scene["choices"].keys())
         

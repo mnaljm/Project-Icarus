@@ -19,7 +19,7 @@
 
 items = {
     "rusty_sword": {
-        "description": "An old, weathered sword with rust spots along the blade.",
+        "description": "An old, weathered sword with rust spots along the blade. +5 damage.",
         "metadata": { 
             "type": "weapon",
             "value": 10,
