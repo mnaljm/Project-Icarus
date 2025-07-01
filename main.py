@@ -24,6 +24,29 @@ def roll_die(sides=20):
     die = randint(1, sides)
     print(f'\rYou rolled: {die:<3}') # Again clearing the line so it's clean and doesn't fill the console with rolling.
 
+def match_input(player_choice, choices):
+    # Matches user input to available choices, ignoring case and supporting partial matches.
+    player_choice = player_choice.lower().strip()
+
+    # First try exact match
+    if player_choice in [choice.lower() for choice in choices]:
+        return next(choice for choice in choices if choice.lower() == player_choice)
+    
+    # Goes through the choices and checks if the input is a substring of any choice
+    matching_choices = [choice for choice in choices if player_choice in choice.lower()]
+
+    if len(matching_choices) == 1: # If there's only one match, return it
+        return matching_choices[0] 
+    
+    elif len(matching_choices) > 1: # If there are multiple matches, inform the user
+        print(f"\033[33mMultiple matches found: {', '.join(matching_choices)}\033[0m")
+        print("\033[31mPlease be more specific.\033[0m")
+        return None
+    
+    else:
+        print("\033[31mInvalid choice you dumbass, pick one of the choices.\033[0m\n") # If nothing matches mock the user lmao
+        return None
+
 def play_game():
     clear_screen()
     current_scene = "Opening"
@@ -38,13 +61,15 @@ def play_game():
         for choice in scene["choices"].keys():
             print(f"- {choice}")
         
-        player_choice = input("Enter your choice: ").lower()
+        player_choice = input("Enter your choice: ")
         
-        if player_choice in scene["choices"]:
-            current_scene = scene["choices"][player_choice]
+        matched_choice = match_input(player_choice, scene["choices"].keys())
+        
+        if matched_choice:
+            current_scene = scene["choices"][matched_choice]
         else:
-            print("\033[31mInvalid choice you dumbass, pick one of the choices.\033[0m\n")
-            input("press enter to try again")
+
+            input("Press Enter to continue...")
 
 
 # BEGIN GAME LOOP
