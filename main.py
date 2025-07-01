@@ -15,6 +15,8 @@ player = {
 player_inventory=[]
 
 # FUNCTIONS
+
+
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -140,6 +142,31 @@ def get_player_total_damage():
     
     return total_damage
 
+def check_choice_requirements(choice, scene_name):
+    #Check if player meets requirements for a choice
+    scene = scenes[scene_name]
+    choice_requirements = scene.get("choice_requirements", {})
+    
+    if choice in choice_requirements:
+        required_effects = choice_requirements[choice].get("effects", [])
+        
+        # Check if player has items with required effects
+        for effect in required_effects:
+            has_effect = False
+            for item_name in player_inventory:
+                if item_name in items:
+                    item_effects = items[item_name].get("metadata", {}).get("effects", [])
+                    if effect in item_effects:
+                        has_effect = True
+                        break
+            
+            if not has_effect:
+                effect_name = effect.replace('_', ' ').title()
+                print(f"\033[31mYou need something with {effect_name} ability to do that.\033[0m")
+                input("\nPress Enter to continue...")
+                return False
+    return True
+
 def play_game():
     clear_screen()
     current_scene = "Opening"
@@ -168,7 +195,16 @@ def play_game():
         for choice in scene["choices"].keys():
             print(f"- {choice}")
 
-        #Print the player inventory
+        # Show items available in the room
+        scene_items = scene.get("metadata", {}).get("items", [])
+        if scene_items:
+            print("\nItems you can see:")
+            for item in scene_items:
+                item_display = item.replace('_', ' ').title()
+                print(f"- {item_display} (use 'take {item}' to pick up)")
+
+        #Print the player inventory option
+        print("\nOther commands:")
         print("- inventory (check your items)")
         
         player_choice = input("Enter your choice: ")
@@ -187,6 +223,10 @@ def play_game():
         matched_choice = match_input(player_choice, scene["choices"].keys())
         
         if matched_choice:
+            # Check if player meets requirements for this choice
+            if not check_choice_requirements(matched_choice, current_scene):
+                continue  # Stay in current scene if requirements not met
+                
             # Handle special actions before moving to next scene
             if handle_special_actions(matched_choice, current_scene):
                 continue  # Stay in current scene after special action
