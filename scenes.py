@@ -63,8 +63,8 @@ scenes = {
             "You enter a small room where a training dummy stands in the center. "
             "A sign on the wall reads: 'Practice your combat skills here.'\n"
             "You can see a sword lying next to the dummy, ready for you to pick up.\n"
-            "Pick up by typing 'pick up rusy_sword'.\n\n"
-            "what will you do?\n"
+            "Pick up by typing 'pick up rusty_sword'.\n\n"
+            "what will you do?\nRu"
 
         ),
         "choices": {
