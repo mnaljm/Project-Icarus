@@ -1,9 +1,17 @@
+
+from time import sleep
+
 # IMPORTS
+
 from scenes import scenes
 import os
 from time import sleep
 from random import randint
 #
+player = {
+    "hp": 100,
+    "damage": 15,
+}
 
 # FUNCTIONS
 def clear_screen():
@@ -43,6 +51,33 @@ def match_input(player_choice, choices):
         print("\033[31mInvalid choice you dumbass, pick one of the choices.\033[0m\n") # If nothing matches mock the user lmao
         return None
 
+
+
+
+def combat_scene(enemy):
+    print(f"A wild {enemy['name']} appears! It has {enemy['hp']} HP.\n")
+    
+    while enemy["hp"] > 0 and player["hp"] > 0:
+        action = input("Type 'attack' to fight: ").strip().lower()
+        
+        if action == "attack":
+            enemy["hp"] -= player["damage"]
+            print(f"You hit the {enemy['name']} for {player['damage']} damage! (Enemy HP: {max(enemy['hp'], 0)})")
+            
+            if enemy["hp"] <= 0:
+                print(f"You defeated the {enemy['name']}! Combat over.\n")
+                input("Press enter to continue...")
+                return True
+            
+            player["hp"] -= enemy["damage"]
+            print(f"The {enemy['name']} hits you for {enemy['damage']} damage! (Your HP: {max(player['hp'], 0)})")
+            
+            if player["hp"] <= 0:
+                print("You have been defeated! Game over.")
+                return False
+        else:
+            print("Invalid action. Please type 'attack'.\n")
+
 def play_game():
     clear_screen()
     current_scene = "Opening"
@@ -51,6 +86,20 @@ def play_game():
         clear_screen()
         scene = scenes[current_scene]
         print(scene["text"])
+
+        if scene.get("combat"):
+            enemy = scene["enemy"].copy()  # fresh copy for each combat
+            combat_result = combat_scene(enemy)
+            
+            if combat_result is True:
+                current_scene = "Hallway"  # example: go back to hallway after combat win
+                continue
+            elif combat_result is None:
+                current_scene = scene["choices"].get("Hallway")
+                continue
+            else:
+                break  # player died or game over
+
         
         # Show choices:
         print("Available choices:")
@@ -64,7 +113,9 @@ def play_game():
         if matched_choice:
             current_scene = scene["choices"][matched_choice]
         else:
+
             input("Press Enter to continue...")
+
 
 # BEGIN GAME LOOP
 play_game()

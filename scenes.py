@@ -55,6 +55,7 @@ scenes = {
         ),
         "choices": {
             "go_down_stairs": "Opening",
+            "fight": "TutorialCombat",
         },
     },
     "TutorialCombat": {
@@ -66,6 +67,21 @@ scenes = {
         "choices": {
             "pick_up_sword_and_shield": "CombatTraining",
             "leave_room": "Hallway"
+        },
+    },
+    "CombatTraining": {
+        "text": (
+            "You grip the sword and shield firmly. The training dummy stands ready.\n"
+            "Prepare to test your skills!\n"
+        ),
+        "combat": True,
+        "enemy": {
+            "name": "Training Dummy",
+            "hp": 30,
+            "damage": 5,
+        },
+        "choices": {
+            "leave_room": "TutorialCombat",
         },
     },
 }

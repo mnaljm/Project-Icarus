@@ -1,0 +1,42 @@
+name: Notify Discord on Issues and PRs
+
+on:
+  issues:
+    types: [opened, closed, reopened]
+  pull_request:
+    types: [opened, closed, reopened]
+
+jobs:
+  discord-notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send event to Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          echo "Preparing payload..."
+
+          # Base message setup
+          EVENT_TYPE="${{ github.event_name }}"
+          ACTION="${{ github.event.action }}"
+
+          # Determine data for issues
+          if [[ "$EVENT_TYPE" == "issues" ]]; then
+            TITLE="${{ github.event.issue.title }}"
+            URL="${{ github.event.issue.html_url }}"
+            AUTHOR="${{ github.event.issue.user.login }}"
+            MESSAGE="📝 Issue *${ACTION}* by **${AUTHOR}**: **${TITLE}**\n${URL}"
+          
+          # Determine data for pull requests
+          elif [[ "$EVENT_TYPE" == "pull_request" ]]; then
+            TITLE="${{ github.event.pull_request.title }}"
+            URL="${{ github.event.pull_request.html_url }}"
+            AUTHOR="${{ github.event.pull_request.user.login }}"
+            MESSAGE="📦 Pull Request *${ACTION}* by **${AUTHOR}**: **${TITLE}**\n${URL}"
+          fi
+
+          # Post to Discord
+          curl -X POST "$DISCORD_WEBHOOK" \
+               -H "Content-Type: application/json" \
+               -d "{\"content\": \"$MESSAGE\"}"
