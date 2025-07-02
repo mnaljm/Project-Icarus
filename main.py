@@ -170,25 +170,32 @@ def check_choice_requirements(choice, scene_name):
 def play_game():
     clear_screen()
     current_scene = "Opening"
+    last_scene = None 
     
     while True:
         clear_screen()
         scene = scenes[current_scene]
         print(scene["text"])
 
-        if scene.get("combat"):
-            enemy = scene["enemy"].copy()  # fresh copy for each combat
-            combat_result = combat_scene(enemy)
-            
-            if combat_result is True:
-                current_scene = "Hallway"  # example: go back to hallway after combat win
-                continue
-            elif combat_result is None:
-                current_scene = scene["choices"].get("Hallway")
-                continue
-            else:
-                break  # player died or game over
+        
 
+        if scene.get("combat") and scene.get("alive", True):
+            if scene.get ("alive") == True:
+                enemy = scene["enemy"].copy()
+                combat_result = combat_scene(enemy)
+
+                if combat_result is True:
+                    scene["alive"] = False
+                    last_scene = current_scene
+                  # last_scene = None
+                    continue
+                else:
+                    break 
+
+
+                    pass
+
+            
         
         # Show choices:
         print("Available choices:")
@@ -230,6 +237,7 @@ def play_game():
             # Handle special actions before moving to next scene
             if handle_special_actions(matched_choice, current_scene):
                 continue  # Stay in current scene after special action
+            
             current_scene = scene["choices"][matched_choice]
         else:
 
