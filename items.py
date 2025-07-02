@@ -18,6 +18,7 @@
 # }
 
 items = {
+    # WEAPONS
     "rusty_sword": {
         "description": "An old, weathered sword with rust spots along the blade. +5 damage.",
         "metadata": { 
@@ -31,12 +32,57 @@ items = {
             },
         }
     },
+    "dagger": {
+        "description": "A sharp dagger with a leather-wrapped handle. +3 damage.",
+        "metadata": {
+            "type": "weapon",
+            "value": 15,
+            "effects": ["damage"],
+            "base_stats": {
+                "damage": 3,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
+    
+    # TOOLS
     "rusty_lockpick": {
         "description": "A rusty lockpick, barely functional but still usable.",
         "metadata": {
             "type": "tool",
             "value": 5,
             "effects": ["unlock"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
+    
+    # POTIONS
+    "sleep_draught": {
+        "description": "A potion that induces sleep, useful for stealth.",
+        "metadata": {
+            "type": "potion",
+            "value": 20,
+            "effects": ["sleep"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
+    
+    # NOTES
+    "temple_note": {
+        "description": "A note found in the storeroom of the prison. 'The elder is awaiting your reply'.",
+        "metadata": {
+            "type": "note",
+            "value": 0,
+            "effects": ["quest"],
             "base_stats": {
                 "damage": 0,
                 "defense": 0,
