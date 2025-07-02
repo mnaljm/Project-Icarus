@@ -17,6 +17,45 @@ player_inventory = []
 # UTILITY FUNCTIONS
 # ============================================================================
 
+def main_menu():
+    # Display the main menu and wait for user input
+    while True:  # Add loop to keep returning to menu
+        clear_screen()
+        print("Welcome to Project Icarus!")
+        print("1. Start Game")
+        print("2. Basic Command List")
+        print("3. Start New Run")
+        print("0. Exit")
+        
+        choice = input("Enter your choice: ").strip()
+        
+        if choice == "1":
+            play_game()
+            # After play_game() returns, loop back to menu
+        elif choice == "2":
+            clear_screen()
+            print("Basic Commands:")
+            print("- i or inventory: Check your items")
+            print("- take [item]: Pick up an item")
+            print("- pick up [item]: Pick up an item")
+            print("- attack: Engage in combat with an enemy")
+            input("\nPress Enter to return to the main menu...")
+            # Loop will continue to show menu again
+        elif choice == "3":
+            clear_screen()
+            print("Starting a new run...")
+            global player_inventory
+            player_inventory = []
+            play_game()
+            # After play_game() returns, loop back to menu
+        elif choice == "0":
+            print("Thank you for playing! Goodbye!")
+            exit(0)
+        else:
+            print("\033[31mInvalid choice, please try again.\033[0m")
+            sleep(1)
+            # Loop will continue to show menu again
+
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -309,6 +348,14 @@ def play_game():
         scene = scenes[current_scene]
         print(scene["text"])
 
+        # Check if this is an ending scene (no choices available)
+        if not scene["choices"]:
+            print("\n" + "="*50)
+            print("GAME OVER")
+            print("="*50)
+            input("\nPress Enter to return to main menu...")
+            return  # Return to main menu
+
         if scene.get("combat") and scene.get("alive", True):
             if scene.get ("alive") == True:
                 enemy = scene["enemy"].copy()
@@ -377,4 +424,4 @@ def play_game():
 # ============================================================================
 
 # BEGIN GAME LOOP
-play_game()
+main_menu()

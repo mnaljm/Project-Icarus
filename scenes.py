@@ -72,6 +72,7 @@ scenes = {
             "What will you do?\n"
         ),
         "choices": {
+            "test": "TestEnding",
             "sneak past the guard": "SneakPastGuard",
             "lure the guard away": "LureGuard",
             "go through narrow passage": "SewerEntrance",
@@ -500,5 +501,13 @@ scenes = {
             "sacrifice yourself": "DeathEnding", # DEATH SCENE
             "sacrifice entire inventory": "GainRelicSacrifice", # You gain The Relic of the Gods
         },
+    },
+    "TestEnding": {
+        "text": (
+            "This is a test ending scene.\n"
+            "You have reached the end of this test.\n\n"
+            "THE END - [TEST ENDING]"
+        ),
+        "choices": {},
     },
 }
