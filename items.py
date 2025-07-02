@@ -116,4 +116,31 @@ items = {
             },
         }
     },
+    "relic_of_the_gods": {
+        "description": "An ancient relic said to hold immense power.",
+        "metadata": {
+            "type": "relic",
+            "value": 100,
+            "effects": ["power"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
+    # MISC ITEMS
+    "ancient_knowledge": { 
+        "description": "A fragment of ancient knowledge, glowing faintly.",
+        "metadata": {
+            "type": "knowledge",
+            "value": 50,
+            "effects": ["wisdom"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
 }
