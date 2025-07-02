@@ -173,13 +173,14 @@ scenes = {
         "combat": True,
         "enemy": {
             "name": "Training Dummy",
-            "hp": 300,
+            "hp": 3,
             "damage": 55,
             "dodge": 10
         },
         "alive": True,
         "choices": {
             "leave room": "GuardCorridor",
+            "test ending": "TestEnding",  # For testing purposes
         },
     },
     "GuardCorridor": {

@@ -20,6 +20,7 @@ player_inventory = []
 def main_menu():
     # Display the main menu and wait for user input
     while True:  # Add loop to keep returning to menu
+        reset_game_state()  # Reset enemies and player each time menu is displayed
         clear_screen()
         print("Welcome to Project Icarus!")
         print("1. Start Game")
@@ -222,6 +223,23 @@ def combat_scene(enemy):
 # ============================================================================
 # REQUIREMENT CHECKING FUNCTIONS
 # ============================================================================
+
+def reset_enemies():
+    #Resets the 'alive' status of all enemies in all scenes to True.
+    for scene_name, scene_data in scenes.items():
+        if "combat" in scene_data and scene_data["combat"] is True:
+            scene_data["alive"] = True
+
+def reset_player():
+    #Reset player stats to default values
+    global player
+    player["hp"] = 100
+    player["damage"] = 15
+
+def reset_game_state():
+    #Reset both enemies and player to default state
+    reset_enemies()
+    reset_player()
 
 def check_choice_requirements(choice, scene_name):
     #Check if player meets requirements for a choice
