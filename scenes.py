@@ -173,8 +173,8 @@ scenes = {
         "combat": True,
         "enemy": {
             "name": "Training Dummy",
-            "hp": 3,
-            "damage": 55,
+            "hp": 30,
+            "damage": 5,
             "dodge": 10
         },
         "alive": True,
