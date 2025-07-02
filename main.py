@@ -20,7 +20,10 @@ player_inventory = []
 def main_menu():
     # Display the main menu and wait for user input
     while True:  # Add loop to keep returning to menu
+        reset_game_state()  # Reset enemies and player each time menu is displayed
         clear_screen()
+        reset_all_alive_flags(scenes)
+
         print("Welcome to Project Icarus!")
         print("1. Start Game")
         print("2. Basic Command List")
@@ -70,6 +73,12 @@ def roll_die(sides=20):
     die = randint(1, sides)
     print(f'\rYou rolled: {die:<3}') # Again clearing the line so it's clean and doesn't fill the console with rolling.
     return die
+
+
+def reset_all_alive_flags(scenes):
+    for scene in scenes.values():
+        if "alive" in scene:
+            scene["alive"] = True
 
 def skill_check(difficulty):
 
@@ -215,7 +224,18 @@ def combat_scene(enemy):
             print(f"The {enemy['name']} hits you for {enemy['damage']} damage! (Your HP: {max(player['hp'], 0)})")
             
             if player["hp"] <= 0:
-                print("You have been defeated! Game over.")
+                print("\033[31mYou have been defeated.\033[0m \n do you wish to try again? \n yes - no ")
+
+                while True:
+                    response = input("Do you wish to try again? (yes - no): ").strip().lower()
+                    if response == "yes":
+                        main_menu()
+                        break
+                    elif response == "no":
+                        exit()
+                    else:
+                        print("You must be certain, yes or no.")
+                    
                 return False
         else:
             print("Invalid action. Please type 'attack'.\n")
@@ -223,6 +243,23 @@ def combat_scene(enemy):
 # ============================================================================
 # REQUIREMENT CHECKING FUNCTIONS
 # ============================================================================
+
+def reset_enemies():
+    #Resets the 'alive' status of all enemies in all scenes to True.
+    for scene_name, scene_data in scenes.items():
+        if "combat" in scene_data and scene_data["combat"] is True:
+            scene_data["alive"] = True
+
+def reset_player():
+    #Reset player stats to default values
+    global player
+    player["hp"] = 100
+    player["damage"] = 15
+
+def reset_game_state():
+    #Reset both enemies and player to default state
+    reset_enemies()
+    reset_player()
 
 def check_choice_requirements(choice, scene_name):
     #Check if player meets requirements for a choice
