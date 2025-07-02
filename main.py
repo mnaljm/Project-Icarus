@@ -1,5 +1,4 @@
 # IMPORTS
-
 from scenes import scenes
 from items import items
 import os
@@ -12,13 +11,81 @@ player = {
     "damage": 15,
 }
 
-player_inventory=[]
+player_inventory = []
 
-# FUNCTIONS
-
+# ============================================================================
+# UTILITY FUNCTIONS
+# ============================================================================
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def roll_die(sides=20):
+    #Rolls a single die with 'sides' number of sides.
+    input("Press ENTER to roll the die")
+    for i in range(10):
+        roll_value = randint(1, sides) # Allows a variable die so we can reuse the same function for different needs.
+        # Creates suspense by 'rolling' the number and overwriting the line so it can be used in a scene without disrupting the play.
+        print(f'\rRolling... {roll_value:<3}', end='', flush=True)  
+        sleep(0.25)           
+    die = randint(1, sides)
+    print(f'\rYou rolled: {die:<3}') # Again clearing the line so it's clean and doesn't fill the console with rolling.
+    return die
+
+def skill_check(difficulty):
+
+    # Define difficulty thresholds
+    thresholds = {
+        "easy": 5,
+        "medium": 10, 
+        "hard": 15
+    }
+    
+    # Get the required roll for this difficulty
+    required_roll = thresholds.get(difficulty.lower(), 10)  # Default to medium if unknown
+    
+    print(f"\033[33mSkill Check - {difficulty.title()} Difficulty (Need {required_roll}+)\033[0m")
+    
+    # Roll the die
+    roll_result = roll_die(20)
+    
+    # Check if successful
+    success = roll_result >= required_roll
+    
+    if success:
+        print(f"\033[32mSuccess! You rolled {roll_result}, needed {required_roll}+\033[0m")
+    else:
+        print(f"\033[31mFailure! You rolled {roll_result}, needed {required_roll}+\033[0m")
+    
+    input("\nPress Enter to continue...")
+    return success
+
+def match_input(player_choice, choices):
+    # Matches user input to available choices, ignoring case and supporting partial matches.
+    player_choice = player_choice.lower().strip()
+
+    # First try exact match
+    if player_choice in [choice.lower() for choice in choices]:
+        return next(choice for choice in choices if choice.lower() == player_choice)
+    
+    # Goes through the choices and checks if the input is a substring of any choice
+    matching_choices = [choice for choice in choices if player_choice in choice.lower()]
+
+    if len(matching_choices) == 1: # If there's only one match, return it
+        return matching_choices[0] 
+    
+    elif len(matching_choices) > 1: # If there are multiple matches, inform the user
+        print(f"\033[33mMultiple matches found: {', '.join(matching_choices)}\033[0m")
+        print("\033[31mPlease be more specific.\033[0m")
+        return None
+    
+    else:
+        print("\033[31mInvalid choice you dumbass, pick one of the choices.\033[0m\n") # If nothing matches mock the user lmao
+        return None
+
+# ============================================================================
+# INVENTORY FUNCTIONS
+# ============================================================================
 
 def add_item_to_inventory(item_name):
     #Add an item to player's inventory
@@ -66,42 +133,23 @@ def handle_special_actions(choice, scene_name):
         return True  # Stay in current scene
     return False
 
-def roll_die(sides=20):
-    #Rolls a single die with 'sides' number of sides.
-    input("Press ENTER to roll the die")
-    for i in range(10):
-        roll_value = randint(1, sides) # Allows a variable die so we can reuse the same function for different needs.
-        # Creates suspense by 'rolling' the number and overwriting the line so it can be used in a scene without disrupting the play.
-        print(f'\rRolling... {roll_value:<3}', end='', flush=True)  
-        sleep(0.25)           
-    die = randint(1, sides)
-    print(f'\rYou rolled: {die:<3}') # Again clearing the line so it's clean and doesn't fill the console with rolling.
+# ============================================================================
+# COMBAT FUNCTIONS
+# ============================================================================
 
-def match_input(player_choice, choices):
-    # Matches user input to available choices, ignoring case and supporting partial matches.
-    player_choice = player_choice.lower().strip()
-
-    # First try exact match
-    if player_choice in [choice.lower() for choice in choices]:
-        return next(choice for choice in choices if choice.lower() == player_choice)
+def get_player_total_damage():
+    #Calculate total damage including base damage and weapon bonuses
+    total_damage = player["damage"]  # Start with base damage
     
-    # Goes through the choices and checks if the input is a substring of any choice
-    matching_choices = [choice for choice in choices if player_choice in choice.lower()]
-
-    if len(matching_choices) == 1: # If there's only one match, return it
-        return matching_choices[0] 
+    # Add damage from all weapons in inventory
+    for item_name in player_inventory:
+        if item_name in items:
+            item = items[item_name]
+            if item.get("metadata", {}).get("type") == "weapon":
+                weapon_damage = item.get("metadata", {}).get("base_stats", {}).get("damage", 0)
+                total_damage += weapon_damage
     
-    elif len(matching_choices) > 1: # If there are multiple matches, inform the user
-        print(f"\033[33mMultiple matches found: {', '.join(matching_choices)}\033[0m")
-        print("\033[31mPlease be more specific.\033[0m")
-        return None
-    
-    else:
-        print("\033[31mInvalid choice you dumbass, pick one of the choices.\033[0m\n") # If nothing matches mock the user lmao
-        return None
-
-
-
+    return total_damage
 
 def combat_scene(enemy):
     hit_chance = 0
@@ -133,19 +181,9 @@ def combat_scene(enemy):
         else:
             print("Invalid action. Please type 'attack'.\n")
 
-def get_player_total_damage():
-    #Calculate total damage including base damage and weapon bonuses
-    total_damage = player["damage"]  # Start with base damage
-    
-    # Add damage from all weapons in inventory
-    for item_name in player_inventory:
-        if item_name in items:
-            item = items[item_name]
-            if item.get("metadata", {}).get("type") == "weapon":
-                weapon_damage = item.get("metadata", {}).get("base_stats", {}).get("damage", 0)
-                total_damage += weapon_damage
-    
-    return total_damage
+# ============================================================================
+# REQUIREMENT CHECKING FUNCTIONS
+# ============================================================================
 
 def check_choice_requirements(choice, scene_name):
     #Check if player meets requirements for a choice
@@ -219,7 +257,47 @@ def mant_minigame():
     else:
         print("You lost the game!")
 
+# ============================================================================
+# SKILL CHECK FUNCTIONS
+# ============================================================================
 
+def handle_skill_check(choice, scene_name):
+    """
+    Handle skill checks for a specific choice in a scene.
+    
+    Args:
+        choice (str): The choice that requires a skill check
+        scene_name (str): The current scene name
+    
+    Returns:
+        bool: True if skill check passed or no skill check required, False if failed
+    """
+    scene = scenes[scene_name]
+    skill_checks = scene.get("metadata", {}).get("skill_check", {})
+    
+    if choice in skill_checks:
+        difficulty = skill_checks[choice]
+        skill_name = choice.replace('_', ' ').title()
+        
+        print(f"\033[33mAttempting to {skill_name}...\033[0m")
+        
+        success = skill_check(difficulty)
+        
+        if not success:
+            print(f"\033[31mYou failed to {skill_name.lower()}!\033[0m")
+            print("\033[33mYou don't feel confident enough to try that again.\033[0m")
+            del scene["choices"][choice]  # Remove the choice from the scene
+            input("\nPress Enter to continue...")
+            return False
+        else:
+            print(f"\033[32mYou successfully {skill_name.lower()}!\033[0m")
+            return True
+    
+    return True  # No skill check required, proceed normally
+
+# ============================================================================
+# MAIN GAME LOOP
+# ============================================================================
 
 def play_game():
     clear_screen()
@@ -230,8 +308,6 @@ def play_game():
         clear_screen()
         scene = scenes[current_scene]
         print(scene["text"])
-
-        
 
         if scene.get("combat") and scene.get("alive", True):
             if scene.get ("alive") == True:
@@ -246,10 +322,6 @@ def play_game():
                 else:
                     break 
 
-
-                    pass
-
-            
         
         # Show choices:
         print("Available choices:")
@@ -292,10 +364,17 @@ def play_game():
             if handle_special_actions(matched_choice, current_scene):
                 continue  # Stay in current scene after special action
             
+            # Handle skill check for the choice
+            if not handle_skill_check(matched_choice, current_scene):
+                continue  # Stay in current scene if skill check failed
+            
             current_scene = scene["choices"][matched_choice]
         else:
-
             input("Press Enter to continue...")
+
+# ============================================================================
+# GAME START
+# ============================================================================
 
 # BEGIN GAME LOOP
 play_game()

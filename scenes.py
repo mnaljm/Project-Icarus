@@ -77,6 +77,11 @@ scenes = {
             "lure the guard away": "LureGuard",
             "go through narrow passage": "SewerEntrance",
         },
+        "metadata": {
+            "skill_check": {
+                "sneak past the guard": "easy"
+            }
+        },
     },
     "SneakPastGuard": {
         "text": (
@@ -88,11 +93,6 @@ scenes = {
         "choices": {
             "enter storeroom": "Storeroom",
             "keep moving down the hallway": "SewerEntrance",
-        },
-        "metadata": {
-            "skill_check": {
-                "sneak": "easy"
-            }
         },
     },
     "LureGuard": {
@@ -194,6 +194,11 @@ scenes = {
             "intimidate the guard": "IntimidateGuard",
             "look for another way": "BlockedPassage",
         },
+        "metadata": {
+            "skill_check": {
+                "intimidate the guard": "medium"
+            }
+        },
     },
     "GuardCombat": {
         "text": (
@@ -222,11 +227,6 @@ scenes = {
         "choices": {
             "continue forward": "OutsideForest",
         },
-        "metadata": {
-            "skill_check": {
-                "intimidation": "medium",
-            }
-        }
     },
     "BlockedPassage": {
         "text": (
