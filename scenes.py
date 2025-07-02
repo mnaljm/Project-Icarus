@@ -252,4 +252,104 @@ scenes = {
             "avoid camp and head into the woods": "ForestWander",
         },
     },
+    
+    "CampfireScene": {
+        "text": (
+            "You creep closer to the flickering light, sticking to the shadows. As you near the campfire, "
+            "you spot three bandits sitting around it, laughing and passing around a flask.\n"
+            "Behind them is a weathered wooden chest and a crude map nailed to a tree.\n\n"
+            "The wind shifts and carries your scent—one of the bandits pauses, sniffing the air.\n\n"
+            "What do you do?\n"
+        ),
+        "choices": {
+            "ambush them now": "BanditFight",
+            "create distraction": "CampfireDistraction",
+            "wait and observe": "CampfireIntel",
+        },
+    },
+
+    "BanditFight": {
+        "text": (
+            "You leap from the underbrush, weapon drawn! The bandits scramble, drawing their blades.\n"
+            "A fast and brutal skirmish begins beneath the forest canopy.\n"
+        ),
+        "combat": True,
+        "enemy": {
+            "name": "Bandit Trio",
+            "hp": 70,
+            "damage": 10,
+        },
+        "alive": True,
+        "choices": {
+            "search the camp": "BanditCampLoot",
+        },
+    },
+
+    "CampfireDistraction": {
+        "text": (
+            "You throw a stone into the forest beyond the camp. One bandit stands, squinting into the darkness.\n"
+            "'Go check it out,' one grumbles.\n"
+            "As he walks off, the remaining two go quiet, looking nervous.\n\n"
+            "You slip closer to the chest.\n"
+        ),
+        "choices": {
+            "steal from the chest": "BanditCampLoot",
+            "knock out remaining bandits": "KnockoutAttempt",
+        },
+    },
+
+    "CampfireIntel": {
+        "text": (
+            "You stay hidden and listen.\n"
+            "'The temple's just past the ridge. Elder says the relic's still inside.'\n"
+            "'Yeah, and that priest keeps babbling about the gods watching us. Creepy bastard.'\n\n"
+            "This could be the clue you need.\n"
+        ),
+        "choices": {
+            "sneak away quietly": "ForestTemplePath",
+            "take them by surprise": "BanditFight",
+        },
+        "metadata": {
+            "clue": True,
+        },
+    },
+
+    "KnockoutAttempt": {
+        "text": (
+            "You creep up behind the nearest bandit and strike — clean and silent.\n"
+            "The second one turns just in time to meet your fist. They're both down.\n"
+            "No alarms raised.\n"
+        ),
+        "choices": {
+            "search the camp": "BanditCampLoot",
+        },
+    },
+
+    "BanditCampLoot": {
+        "text": (
+            "You search the chest and find a worn map with markings leading to a 'Sunken Temple', "
+            "a strange stone pendant, and some dried provisions.\n\n"
+            "You now have a heading — time to find out what's hidden in the ruins.\n"
+        ),
+        "choices": {
+            "follow the map to the temple": "ForestTemplePath",
+        },
+        "metadata": {
+            "items": ["temple_map", "stone_pendant", "dried_provisions"],
+            "clue": True,
+        },
+    },
+
+    "ForestTemplePath": {
+        "text": (
+            "The trees grow denser as you travel toward the marked location. Moss-covered stones emerge "
+            "from the undergrowth, forming an ancient path. Birds fall silent. Something sacred — or cursed — lies ahead.\n\n"
+            "The temple entrance looms up ahead, half-buried in vines.\n"
+        ),
+        "choices": {
+            "enter the temple": "TempleEntrance",
+            "inspect the area around the temple first": "TemplePerimeter",
+        },
+    },
+
 }
