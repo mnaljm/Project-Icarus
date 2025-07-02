@@ -1,5 +1,4 @@
 # IMPORTS
-
 from scenes import scenes
 from items import items
 import os
@@ -12,13 +11,52 @@ player = {
     "damage": 15,
 }
 
-player_inventory=[]
+player_inventory = []
 
-# FUNCTIONS
-
+# ============================================================================
+# UTILITY FUNCTIONS
+# ============================================================================
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def roll_die(sides=20):
+    #Rolls a single die with 'sides' number of sides.
+    input("Press ENTER to roll the die")
+    for i in range(10):
+        roll_value = randint(1, sides) # Allows a variable die so we can reuse the same function for different needs.
+        # Creates suspense by 'rolling' the number and overwriting the line so it can be used in a scene without disrupting the play.
+        print(f'\rRolling... {roll_value:<3}', end='', flush=True)  
+        sleep(0.25)           
+    die = randint(1, sides)
+    print(f'\rYou rolled: {die:<3}') # Again clearing the line so it's clean and doesn't fill the console with rolling.
+
+def match_input(player_choice, choices):
+    # Matches user input to available choices, ignoring case and supporting partial matches.
+    player_choice = player_choice.lower().strip()
+
+    # First try exact match
+    if player_choice in [choice.lower() for choice in choices]:
+        return next(choice for choice in choices if choice.lower() == player_choice)
+    
+    # Goes through the choices and checks if the input is a substring of any choice
+    matching_choices = [choice for choice in choices if player_choice in choice.lower()]
+
+    if len(matching_choices) == 1: # If there's only one match, return it
+        return matching_choices[0] 
+    
+    elif len(matching_choices) > 1: # If there are multiple matches, inform the user
+        print(f"\033[33mMultiple matches found: {', '.join(matching_choices)}\033[0m")
+        print("\033[31mPlease be more specific.\033[0m")
+        return None
+    
+    else:
+        print("\033[31mInvalid choice you dumbass, pick one of the choices.\033[0m\n") # If nothing matches mock the user lmao
+        return None
+
+# ============================================================================
+# INVENTORY FUNCTIONS
+# ============================================================================
 
 def add_item_to_inventory(item_name):
     #Add an item to player's inventory
@@ -66,42 +104,23 @@ def handle_special_actions(choice, scene_name):
         return True  # Stay in current scene
     return False
 
-def roll_die(sides=20):
-    #Rolls a single die with 'sides' number of sides.
-    input("Press ENTER to roll the die")
-    for i in range(10):
-        roll_value = randint(1, sides) # Allows a variable die so we can reuse the same function for different needs.
-        # Creates suspense by 'rolling' the number and overwriting the line so it can be used in a scene without disrupting the play.
-        print(f'\rRolling... {roll_value:<3}', end='', flush=True)  
-        sleep(0.25)           
-    die = randint(1, sides)
-    print(f'\rYou rolled: {die:<3}') # Again clearing the line so it's clean and doesn't fill the console with rolling.
+# ============================================================================
+# COMBAT FUNCTIONS
+# ============================================================================
 
-def match_input(player_choice, choices):
-    # Matches user input to available choices, ignoring case and supporting partial matches.
-    player_choice = player_choice.lower().strip()
-
-    # First try exact match
-    if player_choice in [choice.lower() for choice in choices]:
-        return next(choice for choice in choices if choice.lower() == player_choice)
+def get_player_total_damage():
+    #Calculate total damage including base damage and weapon bonuses
+    total_damage = player["damage"]  # Start with base damage
     
-    # Goes through the choices and checks if the input is a substring of any choice
-    matching_choices = [choice for choice in choices if player_choice in choice.lower()]
-
-    if len(matching_choices) == 1: # If there's only one match, return it
-        return matching_choices[0] 
+    # Add damage from all weapons in inventory
+    for item_name in player_inventory:
+        if item_name in items:
+            item = items[item_name]
+            if item.get("metadata", {}).get("type") == "weapon":
+                weapon_damage = item.get("metadata", {}).get("base_stats", {}).get("damage", 0)
+                total_damage += weapon_damage
     
-    elif len(matching_choices) > 1: # If there are multiple matches, inform the user
-        print(f"\033[33mMultiple matches found: {', '.join(matching_choices)}\033[0m")
-        print("\033[31mPlease be more specific.\033[0m")
-        return None
-    
-    else:
-        print("\033[31mInvalid choice you dumbass, pick one of the choices.\033[0m\n") # If nothing matches mock the user lmao
-        return None
-
-
-
+    return total_damage
 
 def combat_scene(enemy):
     print(f"A wild {enemy['name']} appears! It has {enemy['hp']} HP.\n")
@@ -128,19 +147,9 @@ def combat_scene(enemy):
         else:
             print("Invalid action. Please type 'attack'.\n")
 
-def get_player_total_damage():
-    #Calculate total damage including base damage and weapon bonuses
-    total_damage = player["damage"]  # Start with base damage
-    
-    # Add damage from all weapons in inventory
-    for item_name in player_inventory:
-        if item_name in items:
-            item = items[item_name]
-            if item.get("metadata", {}).get("type") == "weapon":
-                weapon_damage = item.get("metadata", {}).get("base_stats", {}).get("damage", 0)
-                total_damage += weapon_damage
-    
-    return total_damage
+# ============================================================================
+# REQUIREMENT CHECKING FUNCTIONS
+# ============================================================================
 
 def check_choice_requirements(choice, scene_name):
     #Check if player meets requirements for a choice
@@ -167,6 +176,10 @@ def check_choice_requirements(choice, scene_name):
                 return False
     return True
 
+# ============================================================================
+# MAIN GAME LOOP
+# ============================================================================
+
 def play_game():
     clear_screen()
     current_scene = "Opening"
@@ -176,8 +189,6 @@ def play_game():
         clear_screen()
         scene = scenes[current_scene]
         print(scene["text"])
-
-        
 
         if scene.get("combat") and scene.get("alive", True):
             if scene.get ("alive") == True:
@@ -192,10 +203,6 @@ def play_game():
                 else:
                     break 
 
-
-                    pass
-
-            
         
         # Show choices:
         print("Available choices:")
@@ -240,8 +247,11 @@ def play_game():
             
             current_scene = scene["choices"][matched_choice]
         else:
-
             input("Press Enter to continue...")
+
+# ============================================================================
+# GAME START
+# ============================================================================
 
 # BEGIN GAME LOOP
 play_game()
