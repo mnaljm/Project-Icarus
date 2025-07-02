@@ -30,6 +30,35 @@ def roll_die(sides=20):
         sleep(0.25)           
     die = randint(1, sides)
     print(f'\rYou rolled: {die:<3}') # Again clearing the line so it's clean and doesn't fill the console with rolling.
+    return die
+
+def skill_check(difficulty):
+
+    # Define difficulty thresholds
+    thresholds = {
+        "easy": 5,
+        "medium": 10, 
+        "hard": 15
+    }
+    
+    # Get the required roll for this difficulty
+    required_roll = thresholds.get(difficulty.lower(), 10)  # Default to medium if unknown
+    
+    print(f"\033[33mSkill Check - {difficulty.title()} Difficulty (Need {required_roll}+)\033[0m")
+    
+    # Roll the die
+    roll_result = roll_die(20)
+    
+    # Check if successful
+    success = roll_result >= required_roll
+    
+    if success:
+        print(f"\033[32mSuccess! You rolled {roll_result}, needed {required_roll}+\033[0m")
+    else:
+        print(f"\033[31mFailure! You rolled {roll_result}, needed {required_roll}+\033[0m")
+    
+    input("\nPress Enter to continue...")
+    return success
 
 def match_input(player_choice, choices):
     # Matches user input to available choices, ignoring case and supporting partial matches.
@@ -177,6 +206,44 @@ def check_choice_requirements(choice, scene_name):
     return True
 
 # ============================================================================
+# SKILL CHECK FUNCTIONS
+# ============================================================================
+
+def handle_skill_check(choice, scene_name):
+    """
+    Handle skill checks for a specific choice in a scene.
+    
+    Args:
+        choice (str): The choice that requires a skill check
+        scene_name (str): The current scene name
+    
+    Returns:
+        bool: True if skill check passed or no skill check required, False if failed
+    """
+    scene = scenes[scene_name]
+    skill_checks = scene.get("metadata", {}).get("skill_check", {})
+    
+    if choice in skill_checks:
+        difficulty = skill_checks[choice]
+        skill_name = choice.replace('_', ' ').title()
+        
+        print(f"\033[33mAttempting to {skill_name}...\033[0m")
+        
+        success = skill_check(difficulty)
+        
+        if not success:
+            print(f"\033[31mYou failed to {skill_name.lower()}!\033[0m")
+            print("\033[33mYou don't feel confident enough to try that again.\033[0m")
+            del scene["choices"][choice]  # Remove the choice from the scene
+            input("\nPress Enter to continue...")
+            return False
+        else:
+            print(f"\033[32mYou successfully {skill_name.lower()}!\033[0m")
+            return True
+    
+    return True  # No skill check required, proceed normally
+
+# ============================================================================
 # MAIN GAME LOOP
 # ============================================================================
 
@@ -244,6 +311,10 @@ def play_game():
             # Handle special actions before moving to next scene
             if handle_special_actions(matched_choice, current_scene):
                 continue  # Stay in current scene after special action
+            
+            # Handle skill check for the choice
+            if not handle_skill_check(matched_choice, current_scene):
+                continue  # Stay in current scene if skill check failed
             
             current_scene = scene["choices"][matched_choice]
         else:
