@@ -176,7 +176,6 @@ def combat_scene(enemy):
             print(f"The {enemy['name']} hits you for {enemy['damage']} damage! (Your HP: {max(player['hp'], 0)})")
             
             if player["hp"] <= 0:
-                print("You have been defeated! Game over.")
                 return False
         else:
             print("Invalid action. Please type 'attack'.\n")
