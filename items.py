@@ -76,11 +76,37 @@ items = {
         }
     },
     
-    # NOTES
+    # Quest ITEMS
     "temple_note": {
         "description": "A note found in the storeroom of the prison. 'The elder is awaiting your reply'.",
         "metadata": {
             "type": "note",
+            "value": 0,
+            "effects": ["quest"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
+    "temple_map": {
+        "description": "A worn map with markings leading to a 'Sunken Temple'.",
+        "metadata": {
+            "type": "map",
+            "value": 0,
+            "effects": ["quest"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
+    "stone_pendant": {
+        "description": "A strange stone pendant, possibly of some significance.",
+        "metadata": {
+            "type": "artifact",
             "value": 0,
             "effects": ["quest"],
             "base_stats": {
