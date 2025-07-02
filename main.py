@@ -152,6 +152,7 @@ def get_player_total_damage():
     return total_damage
 
 def combat_scene(enemy):
+    hit_chance = 0
     print(f"A wild {enemy['name']} appears! It has {enemy['hp']} HP.\n")
     
     while enemy["hp"] > 0 and player["hp"] > 0:
@@ -159,8 +160,12 @@ def combat_scene(enemy):
         
         if action == "attack":
             total_damage = get_player_total_damage()
-            enemy["hp"] -= total_damage
-            print(f"You hit the {enemy['name']} for {total_damage} damage! (Enemy HP: {max(enemy['hp'], 0)})")
+            hit_chance = randint (2, 20)
+            if enemy["dodge"] < hit_chance:
+                enemy["hp"] -= total_damage
+                print(f"You hit the {enemy['name']} for {total_damage} damage! (Enemy HP: {max(enemy['hp'], 0)})")
+            else:
+                print("you missed")
             
             if enemy["hp"] <= 0:
                 print(f"You defeated the {enemy['name']}! Combat over.\n")
@@ -204,6 +209,53 @@ def check_choice_requirements(choice, scene_name):
                 input("\nPress Enter to continue...")
                 return False
     return True
+
+def mant_minigame():
+    npcpick = ""
+    pick = ""
+    score = 0
+    npcscore = 0
+
+    while score < 3 and npcscore < 3:
+        print("Choose your weapon - (rock, paper, scissor):")
+        pick = input("").lower()
+
+        # Random number between 1 and 9
+        npcvalue = randint (1, 9)
+        if npcvalue <= 3:
+            npcpick = "rock"
+        elif npcvalue <= 6:
+            npcpick = "paper"
+        else:
+            npcpick = "scissor"
+
+        print(f"NPC chose {npcpick}")
+
+        if pick == npcpick:
+            print("It's a draw!")
+
+        elif (pick == "rock" and npcpick == "paper") or \
+            (pick == "paper" and npcpick == "scissor") or \
+            (pick == "scissor" and npcpick == "rock"):
+            npcscore += 1
+            print("You lose this round!")
+
+        elif (pick == "rock" and npcpick == "scissor") or \
+            (pick == "paper" and npcpick == "rock") or \
+            (pick == "scissor" and npcpick == "paper"):
+            score += 1
+            print("You win this round!")
+
+        else:
+            print("Invalid choice, please pick rock, paper, or scissor.")
+            continue  # Skip score printing and next loop iteration if invalid input
+
+        print(f"Score - You: {score}, NPC: {npcscore}\n")
+
+    if score == 3:
+        print("You won the game!")
+    else:
+        print("You lost the game!")
 
 # ============================================================================
 # SKILL CHECK FUNCTIONS

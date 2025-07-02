@@ -175,6 +175,7 @@ scenes = {
             "name": "Training Dummy",
             "hp": 30,
             "damage": 5,
+            "dodge": 10
         },
         "alive": True,
         "choices": {
@@ -209,6 +210,7 @@ scenes = {
             "name": "Prison Guard",
             "hp": 40,
             "damage": 8,
+            "dodge": 10
         },
         "alive": True,
         "choices": {
