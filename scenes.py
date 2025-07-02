@@ -327,16 +327,15 @@ scenes = {
 
     "BanditCampLoot": {
         "text": (
-            "You search the chest and find a worn map with markings leading to a 'Sunken Temple', "
-            "a strange stone pendant, and some dried provisions.\n\n"
+            "You search the chest and find a worn map with markings leading to a 'Sunken Temple'and "
+            "a strange stone pendant.\n\n"
             "You now have a heading — time to find out what's hidden in the ruins.\n"
         ),
         "choices": {
             "follow the map to the temple": "ForestTemplePath",
         },
         "metadata": {
-            "items": ["temple_map", "stone_pendant", "dried_provisions"],
-            "clue": True,
+            "items": ["temple_map", "stone_pendant",],
         },
     },
 
@@ -351,5 +350,156 @@ scenes = {
             "inspect the area around the temple first": "TemplePerimeter",
         },
     },
+    "TemplePerimeter": {
+        "text": (
+            "You circle the temple ruins carefully. The forest seems to hold its breath.\n"
+            "Near the rear of the temple, you find a collapsed section of wall partially hidden by thick vines.\n"
+            "Scratched into the stone is a symbol matching the one on your pendant — the stone faintly glows.\n\n"
+            "There’s a crack just wide enough to squeeze through.\n"
+        ),
+        "choices": {
+            "enter through the crack": "TempleInnerSanctum",
+            "go back and enter via the main door": "TempleEntrance",
+        },
+        "metadata": {
+            "skill_check": {
+                "enter through the crack": "easy"
+            },
+            "clue": True,
+        },
+    },
 
+    "TempleEntrance": {
+        "text": (
+            "You push open the heavy temple doors. Dust and darkness greet you.\n"
+            "The air is heavy with age and incense. Faded murals line the walls — warriors kneeling before winged figures.\n"
+            "An altar glows faintly at the far end, and strange chanting echoes deeper inside.\n\n"
+            "What do you do?\n"
+        ),
+        "choices": {
+            "approach the altar": "AltarInvestigation",
+            "follow the sound of chanting": "CultEncounter",
+        },
+    },
+    "CultEncounter": {
+        "text": (
+            "You follow the chanting deeper into the temple. The air grows thick with incense and the sound of drums.\n"
+            "You find a group of hooded figures gathered around a large stone altar, chanting in an ancient tongue.\n"
+            "Atop the altar lies a glowing relic, pulsating with energy.\n\n"
+            "The cultists turn to you, eyes wide with surprise.\n"
+        ),
+        "choices": {
+            "demand the relic": "RelicDemand",
+            "attack the cultists": "CultistFight",
+        },
+    },
+    "RelicDemand": {
+        "text": (
+            "You step forward, demanding the relic. The cultists exchange glances, then one steps forward.\n"
+            "'You seek the relic? It is not for the unworthy.'\n"
+            "He raises his hands, and the relic glows brighter.\n\n"
+            "What do you do?\n"
+        ),
+        "choices": {
+            "fight for the relic": "CultistFight",
+            "offer to prove your worthiness": "RelicChallenge",
+        },
+    },
+    "CultistFight": {
+        "text": (
+            "The cultists draw their weapons, chanting louder. You ready yourself for a fight.\n"
+            "The air crackles with energy as the relic pulses on the altar.\n\n"
+            "Prepare for battle!\n"
+        ),
+        "combat": True,
+        "enemy": {
+            "name": "Cultist Group",
+            "hp": 50,
+            "damage": 12,
+        },
+        "alive": True,
+        "choices": {
+            "search the altar after victory": "RelicAcquisition",
+        },
+    },
+    "RelicChallenge": {
+        "text": (
+            "The cultist nods, intrigued. 'Very well. To prove your worth, you must answer a riddle.'\n"
+            "'What is the key that opens all doors but cannot be seen?'\n\n"
+            "You think carefully about the answer.\n"
+        ),
+        "choices": {
+            "answer 'knowledge'": "RelicAcquisition",  # Correct answer
+            "answer 'time'": "RelicUnworth",  # Incorrect answer leads to escape
+            "refuse to answer": "RelicRefusal",  # Leads to combat
+        },
+    },
+    "RelicAcquisition": {
+        "text": (
+            "The cultist nods approvingly. 'You have proven your worth.'\n"
+            "He steps aside, allowing you to take the relic from the altar.\n"
+            "As you grasp it, a surge of power flows through you. You feel a connection to the ancient gods.\n\n"
+            "You now possess the Relic of the Gods.\n"
+        ),
+        "choices": {
+            "leave the temple with the relic": "EndingWithRelic",
+            "travel back to town with the relic": "TownReturnWithRelic",
+        },
+        "metadata": {
+            "items": ["relic_of_the_gods"],
+        },
+    },
+    "RelicUnworth": {
+        "text": (
+            "The cultist shakes his head. 'You are not worthy of the relic.'\n"
+            "With a wave of his hand, the relic vanishes, and the cultists prepare to attack.\n\n"
+            "You must escape!\n"
+        ),
+        "choices": {
+            "fight your way out": "CultistFight",
+            "flee the temple": "TempleEscape",
+        },
+    },
+    "RelicRefusal": {
+        "text": (
+            "The cultist scowls. 'You refuse to answer? Then you are not worthy.'\n"
+            "He raises his hands, and the relic glows ominously.\n"
+            "The cultists prepare to attack.\n\n"
+            "Prepare for battle!\n"
+        ),
+        "combat": True,
+        "enemy": {
+            "name": "Cultist Group",
+            "hp": 50,
+            "damage": 12,
+        },
+        "alive": True,
+        "choices": {
+            "search the altar after victory": "RelicAcquisition",
+        },
+    },
+    "TempleEscape": {
+        "text": (
+            "You turn and sprint back through the temple, the cultists shouting behind you.\n"
+            "You burst through the main doors and into the forest, heart pounding.\n"
+            "The relic is lost, but you have escaped with your life.\n\n"
+            "What will you do now?\n"
+        ),
+        "choices": {
+            "head back to town empty-handed": "TownReturnEmpty",
+        },
+    },
+    "AltarInvestigation": {
+            "text": (
+            "You step cautiously toward the altar. The stone is warm to the touch, and the faint glow intensifies as you approach.\n"
+            "The altar is adorned with offerings — trinkets, bones, and a large, glowing crystal at its center.\n"
+            "There is a note pinned to the altar: 'To those who seek the truth, the gods await your sacrifice.\n\n"
+            "What do you do?\n"
+        ),
+        "choices": {
+            "sacrifice an item from invenstory": "SacrificeItem", # Nothing happens
+            "sacrifice yourself": "DeathEnding", # DEATH SCENE
+            "sacrifice entire inventory": "GainRelicSacrifice", # You gain The Relic of the Gods
+        },
+    },
 }
