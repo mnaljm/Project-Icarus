@@ -2,7 +2,7 @@
 from scenes import scenes
 from items import items
 import os
-from time import sleep
+from time import sleep, time
 from random import randint
 
 # PLAYER DATA
@@ -12,6 +12,11 @@ player = {
 }
 
 player_inventory = []
+
+# SPEEDRUN DATA
+speedrun_start_time = None
+personal_best = None  # Store only the current session's personal best
+player_name = None
 
 # ============================================================================
 # UTILITY FUNCTIONS
@@ -28,6 +33,7 @@ def main_menu():
         print("1. Start Game")
         print("2. Basic Command List")
         print("3. Start New Run")
+        print("4. View Speedrun Leaderboard")
         print("0. Exit")
         
         choice = input("Enter your choice: ").strip()
@@ -47,10 +53,13 @@ def main_menu():
         elif choice == "3":
             clear_screen()
             print("Starting a new run...")
-            global player_inventory
+            global player_inventory, player_name
             player_inventory = []
+            player_name = None  # Reset player name for new run
             play_game()
             # After play_game() returns, loop back to menu
+        elif choice == "4":
+            show_speedrun_leaderboard()
         elif choice == "0":
             print("Thank you for playing! Goodbye!")
             exit(0)
@@ -372,6 +381,72 @@ def handle_skill_check(choice, scene_name):
     return True  # No skill check required, proceed normally
 
 # ============================================================================
+# SPEEDRUN FUNCTIONS
+# ============================================================================
+
+def start_speedrun_timer():
+    """Start the speedrun timer"""
+    global speedrun_start_time
+    speedrun_start_time = time()
+
+def get_speedrun_time():
+    """Get the current speedrun time in seconds"""
+    if speedrun_start_time is None:
+        return 0
+    return time() - speedrun_start_time
+
+def format_time(seconds):
+    """Format time in MM:SS.ss format"""
+    minutes = int(seconds // 60)
+    remaining_seconds = seconds % 60
+    return f"{minutes:02d}:{remaining_seconds:05.2f}"
+
+def save_speedrun_time(completion_time):
+    """Save a speedrun time and return if it's a personal best"""
+    global personal_best
+    
+    # Check if this is a personal best
+    is_personal_best = personal_best is None or completion_time < personal_best
+    
+    if is_personal_best:
+        personal_best = completion_time
+    
+    return is_personal_best
+
+def show_speedrun_leaderboard():
+    """Display the current session's personal best"""
+    clear_screen()
+    print("=" * 50)
+    print("CURRENT SESSION PERSONAL BEST")
+    print("=" * 50)
+    
+    if personal_best is None:
+        print("No completed runs in this session yet!")
+    else:
+        formatted_time = format_time(personal_best)
+        current_player = player_name if player_name else "You"
+        print(f"Best Time: {formatted_time}")
+        print(f"Player: {current_player}")
+    
+    input("\nPress Enter to return to main menu...")
+
+
+
+def get_player_name():
+    """Get the player's name for speedrun tracking"""
+    global player_name
+    if player_name is None:
+        clear_screen()
+        print("Welcome to Project Icarus Speedrun!")
+        print("Please enter your name for the leaderboard:")
+        player_name = input("Name: ").strip()
+        if not player_name:
+            player_name = "Anonymous"
+        print(f"Good luck, {player_name}!")
+        input("Press Enter to continue...")
+    return player_name
+
+# ============================================================================
 # MAIN GAME LOOP
 # ============================================================================
 
@@ -380,6 +455,12 @@ def play_game():
     current_scene = "Opening"
     last_scene = None 
     
+    # Get player name at the start for speedrun tracking
+    get_player_name()
+    
+    # Start speedrun timer
+    start_speedrun_timer()
+    
     while True:
         clear_screen()
         scene = scenes[current_scene]
@@ -387,9 +468,22 @@ def play_game():
 
         # Check if this is an ending scene (no choices available)
         if not scene["choices"]:
+            # Calculate speedrun time
+            completion_time = get_speedrun_time()
+            formatted_time = format_time(completion_time)
+            
             print("\n" + "="*50)
             print("GAME OVER")
             print("="*50)
+            print(f"Completion Time: {formatted_time}")
+            
+            # Save the speedrun time and check for personal best
+            is_personal_best = save_speedrun_time(completion_time)
+            
+            # Display appropriate record message
+            if is_personal_best:
+                print("🎉 NEW PERSONAL BEST! 🎉")
+            
             input("\nPress Enter to return to main menu...")
             return  # Return to main menu
 
@@ -423,6 +517,11 @@ def play_game():
         #Print the player inventory option
         print("\nOther commands:")
         print("- inventory (check your items)")
+        
+        # Show current speedrun time
+        current_time = get_speedrun_time()
+        formatted_current_time = format_time(current_time)
+        print(f"\nTime: {formatted_current_time}")
         
         player_choice = input("Enter your choice: ")
         
