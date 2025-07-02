@@ -111,13 +111,11 @@ scenes = {
         "text": (
             "Inside the dusty storeroom, you find old tools and supplies.\n"
             "Among the clutter is a small dagger wrapped in cloth and a vial labeled 'sleep draught'.\n"
-            "You also spot a torn note: 'Temple lies beyond the roots of fire and ash.'\n\n"
+            "You also spot a torn note: 'The elder is awaiting your reply.'\n\n"
             "What do you take?\n"
         ),
         "choices": {
-            "take dagger and vial": "SewerEntrance",
-            "just take the note": "SewerEntrance",
-            "leave everything": "SewerEntrance",
+            "go back and enter the narrow passage": "SewerEntrance",
         },
         "metadata": {
             "items": ["dagger", "sleep_draught", "temple_note"],
@@ -151,18 +149,7 @@ scenes = {
             "clue": True,
         },
     },
-    "OutsideForest": {
-        "text": (
-            "You emerge from the sewer into the forest outside the prison. The moon hangs low and mist clings to the trees.\n"
-            "Freedom — for now. But the shadows of the Elder's men stretch far.\n"
-            "Ahead, you see a faint flickering — a campfire. Could be danger. Could be a lead.\n\n"
-            "What will you do?\n"
-        ),
-        "choices": {
-            "approach campfire stealthily": "CampfireScene",
-            "avoid camp and head into the woods": "ForestWander",
-        },
-    },
+
     # COMBAT
     "TutorialCombat": {
         "text": (
@@ -247,6 +234,20 @@ scenes = {
         "choices": {
             "crawl through passage": "SewerEntrance",
             "go back and fight the guard": "GuardCombat",
+        },
+    },
+
+# Tutorial over
+    "OutsideForest": {
+        "text": (
+            "You emerge from the sewer into the forest outside the prison. The moon hangs low and mist clings to the trees.\n"
+            "Freedom — for now. But the shadows of the Elder's men stretch far.\n"
+            "Ahead, you see a faint flickering — a campfire. Could be danger. Could be a lead.\n\n"
+            "What will you do?\n"
+        ),
+        "choices": {
+            "approach campfire stealthily": "CampfireScene",
+            "avoid camp and head into the woods": "ForestWander",
         },
     },
 }
