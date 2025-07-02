@@ -189,6 +189,7 @@ scenes = {
             "hp": 30,
             "damage": 5,
         },
+        "alive": True,
         "choices": {
             "leave room": "GuardCorridor",
         },
@@ -217,6 +218,7 @@ scenes = {
             "hp": 40,
             "damage": 8,
         },
+        "alive": True,
         "choices": {
             "continue forward": "OutsideForest",
         },
