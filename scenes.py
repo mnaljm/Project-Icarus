@@ -235,7 +235,7 @@ scenes = {
         },
     },
 
-# Tutoral over
+# Tutorial over
     "OutsideForest": {
         "text": (
             "You emerge from the sewer into the forest outside the prison. The moon hangs low and mist clings to the trees.\n"
