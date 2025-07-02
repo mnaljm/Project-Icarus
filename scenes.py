@@ -166,8 +166,8 @@ scenes = {
     # COMBAT
     "TutorialCombat": {
         "text": (
-            "You enter a small room where a training dummy stands in the center./n"
-            "A sign on the wall reads: 'Practice your combat skills here.\n"
+            "You enter a small room where a training dummy stands in the center.\n"
+            "A sign on the wall reads: 'Practice your combat skills here'.\n"
             "You can see a sword lying next to the dummy, ready for you to pick up.\n\n"
             "What will you do?\n"
         ),
