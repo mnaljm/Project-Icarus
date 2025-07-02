@@ -9,7 +9,6 @@
 #         "Add atmospheric details and setting information.\n"
 #         "Describe what the player sees, hears, and feels.\n\n"
 #         "Present the player with clear choices.\n"
-#         "(choice1/choice2/choice3)\n"
 #     ),
 #     "choices": {
 #         "choice1": "next_scene_1",
