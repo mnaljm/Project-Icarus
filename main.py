@@ -21,6 +21,8 @@ def main_menu():
     # Display the main menu and wait for user input
     while True:  # Add loop to keep returning to menu
         clear_screen()
+        reset_all_alive_flags(scenes)
+
         print("Welcome to Project Icarus!")
         print("1. Start Game")
         print("2. Basic Command List")
@@ -70,6 +72,12 @@ def roll_die(sides=20):
     die = randint(1, sides)
     print(f'\rYou rolled: {die:<3}') # Again clearing the line so it's clean and doesn't fill the console with rolling.
     return die
+
+
+def reset_all_alive_flags(scenes):
+    for scene in scenes.values():
+        if "alive" in scene:
+            scene["alive"] = True
 
 def skill_check(difficulty):
 
@@ -215,6 +223,18 @@ def combat_scene(enemy):
             print(f"The {enemy['name']} hits you for {enemy['damage']} damage! (Your HP: {max(player['hp'], 0)})")
             
             if player["hp"] <= 0:
+                print("\033[31mYou have been defeated.\033[0m \n do you wish to try again? \n yes - no ")
+
+                while True:
+                    response = input("Do you wish to try again? (yes - no): ").strip().lower()
+                    if response == "yes":
+                        main_menu()
+                        break
+                    elif response == "no":
+                        exit()
+                    else:
+                        print("You must be certain, yes or no.")
+                    
                 return False
         else:
             print("Invalid action. Please type 'attack'.\n")
