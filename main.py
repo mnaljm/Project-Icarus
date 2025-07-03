@@ -40,7 +40,10 @@ def main_menu():
         clear_screen()
         reset_all_alive_flags(scenes)
 
-        print("Welcome to Project Icarus!")
+        print("Welcome to Project Icarus!\n")
+        print("This is a text-based adventure game where you can explore, fight enemies, and collect items.")
+        print("When starting a new run, all progress will be reset while a new game let's you start with your current inventory.")
+        print("If this is your first time playing we recommend you read the basic command list.\n")
         print("1. Start Game")
         print("2. Basic Command List")
         print("3. Start New Run")
