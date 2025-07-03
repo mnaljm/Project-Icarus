@@ -4,6 +4,7 @@ from items import items
 import os
 from time import sleep, time
 from random import randint
+from collections import Counter
 
 # PLAYER DATA
 player = {

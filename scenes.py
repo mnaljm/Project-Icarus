@@ -302,6 +302,7 @@ scenes = {
             "name": "Bandit Trio",
             "hp": 70,
             "damage": 10,
+            "dodge": 10
         },
         "alive": True,
         "choices": {
@@ -930,6 +931,7 @@ scenes = {
             "name": "Cultist Group",
             "hp": 50,
             "damage": 12,
+            "dodge": 10
         },
         "alive": True,
         "choices": {
@@ -949,6 +951,7 @@ scenes = {
             "name": "Cultist Group",
             "hp": 50,
             "damage": 12,
+            "dodge": 10
         },
         "alive": True,
         "choices": {
