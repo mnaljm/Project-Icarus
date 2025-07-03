@@ -27,6 +27,19 @@ speedrun_start_time = None
 personal_best = None  # Store only the current session's personal best
 player_name = None
 
+# ORIGINAL SCENE DATA - Store original items for reset functionality
+original_scene_items = {}
+
+def store_original_scene_items():
+    #Store the original items from each scene for reset purposes
+    global original_scene_items
+    for scene_name, scene_data in scenes.items():
+        if "metadata" in scene_data and "items" in scene_data["metadata"]:
+            original_scene_items[scene_name] = scene_data["metadata"]["items"].copy()
+
+# Store original items when the game starts
+store_original_scene_items()
+
 # ============================================================================ 
 # UTILITY FUNCTIONS
 # ============================================================================
@@ -281,6 +294,13 @@ def reset_enemies():
         if "combat" in scene_data and scene_data["combat"] is True:
             scene_data["alive"] = True
 
+def reset_scene_items():
+    #Reset all scene items back to their original state
+    global original_scene_items
+    for scene_name, original_items in original_scene_items.items():
+        if scene_name in scenes and "metadata" in scenes[scene_name]:
+            scenes[scene_name]["metadata"]["items"] = original_items.copy()
+
 def reset_player():
     #Reset player stats to default values
     global player
@@ -288,8 +308,9 @@ def reset_player():
     player["damage"] = 15
 
 def reset_game_state():
-    #Reset both enemies and player to default state
+    #Reset enemies, player, and scene items to default state
     reset_enemies()
+    reset_scene_items()
     reset_player()
 
 def check_choice_requirements(choice, scene_name):
