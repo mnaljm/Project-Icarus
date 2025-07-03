@@ -1,0 +1,67 @@
+name: Build and Release Executable
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Build executable with PyInstaller
+      run: |
+        python -m PyInstaller --onefile --add-data "menu_music.mp3;." --name "Project-Icarus" main.py
+        
+    - name: Upload executable artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Project-Icarus-Windows
+        path: dist/Project-Icarus.exe
+        
+    - name: Create Release (on main branch push)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ github.run_number }}
+        name: Release v${{ github.run_number }}
+        body: |
+          🎮 **Project Icarus - Text Adventure Game**
+          
+          Automatic release created from commit: ${{ github.sha }}
+          
+          **What's New:**
+          - Latest changes from main branch
+          - Single executable file with bundled music
+          
+          **How to Run:**
+          1. Download `Project-Icarus.exe`
+          2. Double-click to run the game
+          3. No additional files or Python installation required!
+          
+          **System Requirements:**
+          - Windows 10/11
+          - No additional dependencies needed
+          
+        files: |
+          dist/Project-Icarus.exe
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
