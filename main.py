@@ -53,7 +53,10 @@ def main_menu():
         clear_screen()
         reset_all_alive_flags(scenes)
 
-        print("Welcome to Project Icarus!")
+        print("Welcome to Project Icarus!\n")
+        print("This is a text-based adventure game where you can explore, fight enemies, and collect items.")
+        print("When starting a new run, all progress will be reset while a new game let's you start with your current inventory.")
+        print("If this is your first time playing we recommend you read the basic command list.\n")
         print("1. Start Game")
         print("2. Basic Command List")
         print("3. Start New Run")
@@ -416,6 +419,11 @@ def mant_minigame(): #minigame1
         print("Choose your weapon - (rock, paper, scissor):")
         pick = input("").lower()
 
+        # Validate input first
+        if pick not in ["rock", "paper", "scissor"]:
+            print("Invalid choice, please pick rock, paper, or scissor.")
+            continue  # Skip to next iteration without processing
+
         # Random number between 1 and 9
         npcvalue = randint (1, 9)
         if npcvalue <= 3:
@@ -441,10 +449,6 @@ def mant_minigame(): #minigame1
             (pick == "scissor" and npcpick == "paper"):
             score += 1
             print("You win this round!")
-
-        else:
-            print("Invalid choice, please pick rock, paper, or scissor.")
-            continue  # Skip score printing and next loop iteration if invalid input
 
         print(f"Score - You: {score}, NPC: {npcscore}\n")
 
@@ -618,6 +622,9 @@ def play_game():
                     mant_minigame()  #play rock paper scissor
                 elif minigame_type == "dice_poker":
                     play_dice_poker() #play dice poker
+                scene["alive"] = False  # Mark minigame as completed
+                input("Press Enter to continue...")
+                continue
         # Show choices:
         print("Available choices:")
         for choice in scene["choices"].keys():
