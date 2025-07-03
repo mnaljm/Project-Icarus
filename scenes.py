@@ -287,8 +287,52 @@ scenes = {
         ),
         "choices": {
             "ambush them now": "BanditFight",
+            "play a game to pass": "RPSGame",
             "create distraction": "CampfireDistraction",
             "wait and observe": "CampfireIntel",
+        },
+    },
+
+    "RPSGame": {
+        "text": (
+            "You step out of the shadows and challange the good and honorable bandits to a game of Rock Paper Siccors,\n"
+            "if you win, they'll have to let you pass?\n"
+            "The bandits look at each other, confused but intrigued.\n"
+            "One bandit stands up and lets out a bellow of laughter. he says,\n"
+            "'all right, if you win, we'll let you go. If you lose, you give us everything you've got.'\n"
+            "'Alright, stranger. Winner takes all,' one says, grinning.\n\n"
+        ),
+        "choices": {
+            "play the game": "PlayRPS",
+        },
+    },
+    
+    "PlayRPS": {
+        "text": (
+            "You play a quick game with them, using your wits to outsmart the bandits.\n"
+        ),
+        "choices": {
+            "sore losers": "BanditFightGame",
+        },
+        "minigame": True,
+        "minigame_type": "rps",
+    },
+
+    "BanditFightGame": {
+        "text": (
+            "Good and honorable maybe, but they are sore losers for sure\n"
+            "A fast and brutal skirmish begins beneath the forest canopy.\n"
+        ),
+        "combat": True,
+        "enemy": {
+            "name": "Bandit Trio",
+            "hp": 70,
+            "damage": 10,
+            "dodge": 10
+        },
+        "alive": True,
+        "choices": {
+            "search the camp": "BanditCampLoot",
         },
     },
 
