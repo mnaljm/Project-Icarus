@@ -395,6 +395,11 @@ def mant_minigame(): #minigame1
         print("Choose your weapon - (rock, paper, scissor):")
         pick = input("").lower()
 
+        # Validate input first
+        if pick not in ["rock", "paper", "scissor"]:
+            print("Invalid choice, please pick rock, paper, or scissor.")
+            continue  # Skip to next iteration without processing
+
         # Random number between 1 and 9
         npcvalue = randint (1, 9)
         if npcvalue <= 3:
@@ -420,10 +425,6 @@ def mant_minigame(): #minigame1
             (pick == "scissor" and npcpick == "paper"):
             score += 1
             print("You win this round!")
-
-        else:
-            print("Invalid choice, please pick rock, paper, or scissor.")
-            continue  # Skip score printing and next loop iteration if invalid input
 
         print(f"Score - You: {score}, NPC: {npcscore}\n")
 
@@ -597,6 +598,9 @@ def play_game():
                     mant_minigame()  #play rock paper scissor
                 elif minigame_type == "dice_poker":
                     play_dice_poker() #play dice poker
+                scene["alive"] = False  # Mark minigame as completed
+                input("Press Enter to continue...")
+                continue
         # Show choices:
         print("Available choices:")
         for choice in scene["choices"].keys():
