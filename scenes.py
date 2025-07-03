@@ -571,9 +571,34 @@ scenes = {
             "ask for a room for the night": "TownRoom",
             "order food and listen to conversations": "TownIntelGathering",
             "ask the innkeeper about local news": "TownNews",
+            "You see a man in the corner with a set of dice, he seems to be looking for a game": "TownDiceGame",
         },
     },
 
+    "TownDiceGame": {
+        "text": (
+            "You approach the man with the dice. He looks up and grins.\n"
+            "'Fancy a game? I could use a good challenge.'\n"
+            "He rolls the dice in his hand, the sound of clattering bone echoing in the inn.\n"
+            "'Let's make it interesting. I won't tell the guards about you if you win, if I win you have to leave town.'\n"
+        ),
+        "choices": {
+            "accept the challenge": "DiceGameChallenge",
+            "politely decline": "TownIntelGathering",
+        },
+    },
+
+    "DiceGameChallenge": {
+        "text": (
+            "You nod and take a seat at his table. He explains the rules of the game, which involve rolling dice to match certain numbers.\n"
+            "You both roll, and the tension in the air is palpable as you try to outsmart each other.\n"
+        ),
+        "minigame": True,
+        "minigame_type": "dice_poker",
+        "choices": {
+            "Thank him for the game": "TownTavern"
+        },
+    },
     "TownTavern": {
         "text": (
             "You approach the tavern and peer through a window. Inside, you see several patrons drinking.\n"
