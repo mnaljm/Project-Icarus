@@ -143,4 +143,95 @@ items = {
             },
         }
     },
+    "ancient_scroll": {
+        "description": "An ancient scroll with cryptic symbols, possibly a spell.",
+        "metadata": {
+            "type": "scroll",
+            "value": 30,
+            "effects": ["magic"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
+    "temple_directions": {
+        "description": "A set of directions leading to the Sunken Temple.",
+        "metadata": {
+            "type": "directions",
+            "value": 0,
+            "effects": ["navigation"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
+    "priests_blessing": {
+        "description": "A blessing from the temple priest, granting protection.",
+        "metadata": {
+            "type": "blessing",
+            "value": 0,
+            "effects": ["protection"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
+    "travel_supplies": {
+        "description": "A bundle of supplies for long journeys, including food and water.",
+        "metadata": {
+            "type": "supplies",
+            "value": 25,
+            "effects": ["sustenance"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 10,
+            },
+        },
+    },
+    "local_map": {
+        "description": "A map of the local area, useful for navigation.",
+        "metadata": {
+            "type": "map",
+            "value": 0,
+            "effects": ["navigation"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 0,
+                "healing": 0
+            },
+        },
+    },
+    "sturdy_knife": {
+        "description": "A sturdy knife, useful for cutting and carving. +9 damage.",
+        "metadata": {
+            "type": "tool",
+            "value": 10,
+            "effects": ["cutting"],
+            "base_stats": {
+                "damage": 9,
+                "defense": 0,
+                "healing": 0
+            },
+        }
+    },
+    "leather_vest": {
+        "description": "A simple leather vest, providing basic protection. +2 defense.",
+        "metadata": {
+            "type": "armor",
+            "value": 15,
+            "effects": ["defense"],
+            "base_stats": {
+                "damage": 0,
+                "defense": 2,
+                "healing": 0
+            },
+        },
+    },
 }

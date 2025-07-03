@@ -4,16 +4,28 @@ from items import items
 import os
 from time import sleep, time
 from random import randint
-import sys     # Import sys for system exit
+from collections import Counter
 import pygame  # Import pygame for audio playback
+import sys
 
 # Initialize the pygame mixer for audio (do this once at the start)
 pygame.init()
 
 pygame.mixer.init()
 
+# Function to get the correct path for bundled resources
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 # Load your main menu music file here (make sure the file is in your project folder)
-pygame.mixer.music.load("menu_music.mp3")
+music_file = resource_path("menu_music.mp3")
+pygame.mixer.music.load(music_file)
 
 # PLAYER DATA
 player = {
@@ -27,6 +39,19 @@ player_inventory = []
 speedrun_start_time = None
 personal_best = None  # Store only the current session's personal best
 player_name = None
+
+# ORIGINAL SCENE DATA - Store original items for reset functionality
+original_scene_items = {}
+
+def store_original_scene_items():
+    #Store the original items from each scene for reset purposes
+    global original_scene_items
+    for scene_name, scene_data in scenes.items():
+        if "metadata" in scene_data and "items" in scene_data["metadata"]:
+            original_scene_items[scene_name] = scene_data["metadata"]["items"].copy()
+
+# Store original items when the game starts
+store_original_scene_items()
 
 # ============================================================================ 
 # UTILITY FUNCTIONS
@@ -83,7 +108,10 @@ def main_menu():
         clear_screen()
         reset_all_alive_flags(scenes)
 
-        print("Welcome to Project Icarus!")
+        print("Welcome to Project Icarus!\n")
+        print("This is a text-based adventure game where you can explore, fight enemies, and collect items.")
+        print("When starting a new run, all progress will be reset while a new game let's you start with your current inventory.")
+        print("If this is your first time playing we recommend you read the basic command list.\n")
         print("1. Start Game")
         print("2. Basic Command List")
         print("3. Start New Run")
@@ -325,6 +353,13 @@ def reset_enemies():
         if "combat" in scene_data and scene_data["combat"] is True:
             scene_data["alive"] = True
 
+def reset_scene_items():
+    #Reset all scene items back to their original state
+    global original_scene_items
+    for scene_name, original_items in original_scene_items.items():
+        if scene_name in scenes and "metadata" in scenes[scene_name]:
+            scenes[scene_name]["metadata"]["items"] = original_items.copy()
+
 def reset_player():
     #Reset player stats to default values
     global player
@@ -332,8 +367,9 @@ def reset_player():
     player["damage"] = 15
 
 def reset_game_state():
-    #Reset both enemies and player to default state
+    #Reset enemies, player, and scene items to default state
     reset_enemies()
+    reset_scene_items()
     reset_player()
 
 def check_choice_requirements(choice, scene_name):
@@ -361,7 +397,75 @@ def check_choice_requirements(choice, scene_name):
                 return False
     return True
 
-def mant_minigame():
+
+# ============================================================================
+# MINIGAMES
+# ============================================================================
+
+
+def play_dice_poker():
+    def roll_dice():
+        return [randint(1, 6) for _ in range(5)]
+
+    def evaluate_hand(dice):
+        counts = Counter(dice)
+        values = list(counts.values())
+
+        if 5 in values:
+            return "Five of a kind", 7
+        elif 4 in values:
+            return "Four of a kind", 6
+        elif sorted(values) == [2, 3]:
+            return "Full house", 5
+        elif 3 in values:
+            return "Three of a kind", 4
+        elif values.count(2) == 2:
+            return "Two pairs", 3
+        elif 2 in values:
+            return "One pair", 2
+        else:
+            return "High dice", 1
+
+    def hand_score(dice):
+        # Higher total sum helps break ties if needed
+        return sum(dice)
+
+    print("Dice Poker Begins!")
+
+    player = roll_dice()
+    opponent = roll_dice()
+
+    sleep(1)
+    opponent_hand, opponent_rank = evaluate_hand(opponent)
+    print(f"Opponent roll: {opponent} → {opponent_hand}")
+    sleep(1)
+    print(".")
+    sleep(1)
+    print(".")
+    sleep(1)
+    player_hand, player_rank = evaluate_hand(player)
+    print(f"Your roll: {player} → {player_hand}")
+
+    # Decide the winner
+    if player_rank > opponent_rank:
+        print("\nYou win! Your hand is stronger.")
+    elif player_rank < opponent_rank:
+        print("\nYou lose! Opponent's hand is stronger.")
+    else:
+        # Same rank: use sum of dice to break tie
+        player_sum = hand_score(player)
+        opponent_sum = hand_score(opponent)
+        if player_sum > opponent_sum:
+            print("\nYou win! Tie breaker by highest dice sum.")
+        elif player_sum < opponent_sum:
+            print("\nYou lose! Opponent wins by highest dice sum.")
+        else:
+            print("\nIt's a draw! Both hands are equally strong.")
+
+
+
+
+def mant_minigame(): #minigame1
     npcpick = ""
     pick = ""
     score = 0
@@ -370,6 +474,11 @@ def mant_minigame():
     while score < 3 and npcscore < 3:
         print("Choose your weapon - (rock, paper, scissor):")
         pick = input("").lower()
+
+        # Validate input first
+        if pick not in ["rock", "paper", "scissor"]:
+            print("Invalid choice, please pick rock, paper, or scissor.")
+            continue  # Skip to next iteration without processing
 
         # Random number between 1 and 9
         npcvalue = randint (1, 9)
@@ -396,10 +505,6 @@ def mant_minigame():
             (pick == "scissor" and npcpick == "paper"):
             score += 1
             print("You win this round!")
-
-        else:
-            print("Invalid choice, please pick rock, paper, or scissor.")
-            continue  # Skip score printing and next loop iteration if invalid input
 
         print(f"Score - You: {score}, NPC: {npcscore}\n")
 
@@ -566,7 +671,16 @@ def play_game():
                 else:
                     break 
 
-        
+        if scene.get("minigame") and scene.get("alive", True):
+            if scene.get("alive") == True:
+                minigame_type = scene.get("minigame_type")
+                if minigame_type == "rps":
+                    mant_minigame()  #play rock paper scissor
+                elif minigame_type == "dice_poker":
+                    play_dice_poker() #play dice poker
+                scene["alive"] = False  # Mark minigame as completed
+                input("Press Enter to continue...")
+                continue
         # Show choices:
         print("Available choices:")
         for choice in scene["choices"].keys():

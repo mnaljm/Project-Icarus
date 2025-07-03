@@ -287,8 +287,53 @@ scenes = {
         ),
         "choices": {
             "ambush them now": "BanditFight",
+            "play a game to pass": "RPSGame",
             "create distraction": "CampfireDistraction",
             "wait and observe": "CampfireIntel",
+        },
+    },
+
+    "RPSGame": {
+        "text": (
+            "You step out of the shadows and challange the good and honorable bandits to a game of Rock Paper Siccors,\n"
+            "if you win, they'll have to let you pass?\n"
+            "The bandits look at each other, confused but intrigued.\n"
+            "One bandit stands up and lets out a bellow of laughter. he says,\n"
+            "'all right, if you win, we'll let you go. If you lose, you give us everything you've got.'\n"
+            "'Alright, stranger. Winner takes all,' one says, grinning.\n\n"
+        ),
+        "choices": {
+            "play the game": "PlayRPS",
+        },
+    },
+    
+    "PlayRPS": {
+        "text": (
+            "You play a quick game with them, using your wits to outsmart the bandits.\n"
+        ),
+        "choices": {
+            "sore losers": "BanditFightGame",
+        },
+        "alive": True,
+        "minigame": True,
+        "minigame_type": "rps",
+    },
+
+    "BanditFightGame": {
+        "text": (
+            "Good and honorable maybe, but they are sore losers for sure\n"
+            "A fast and brutal skirmish begins beneath the forest canopy.\n"
+        ),
+        "combat": True,
+        "enemy": {
+            "name": "Bandit Trio",
+            "hp": 70,
+            "damage": 10,
+            "dodge": 10
+        },
+        "alive": True,
+        "choices": {
+            "search the camp": "BanditCampLoot",
         },
     },
 
@@ -302,6 +347,7 @@ scenes = {
             "name": "Bandit Trio",
             "hp": 70,
             "damage": 10,
+            "dodge": 10
         },
         "alive": True,
         "choices": {
@@ -526,9 +572,35 @@ scenes = {
             "ask for a room for the night": "TownRoom",
             "order food and listen to conversations": "TownIntelGathering",
             "ask the innkeeper about local news": "TownNews",
+            "Go play some dice, with the sketchy man in the corner": "TownDiceGame",
         },
     },
 
+    "TownDiceGame": {
+        "text": (
+            "You approach the man with the dice. He looks up and grins.\n"
+            "'Fancy a game? I could use a good challenge.'\n"
+            "He rolls the dice in his hand, the sound of clattering bone echoing in the inn.\n"
+            "'Let's make it interesting. I won't tell the guards about you if you win, if I win you have to leave town.'\n"
+        ),
+        "choices": {
+            "accept the challenge": "DiceGameChallenge",
+            "politely decline": "TownIntelGathering",
+        },
+    },
+
+    "DiceGameChallenge": {
+        "text": (
+            "You nod and take a seat at his table. He explains the rules of the game, which involve rolling dice to match certain numbers.\n"
+            "You both roll, and the tension in the air is palpable as you try to outsmart each other.\n"
+        ),
+        "alive": True,
+        "minigame": True,
+        "minigame_type": "dice_poker",
+        "choices": {
+            "Thank him for the game": "TownTavern"
+        },
+    },
     "TownTavern": {
         "text": (
             "You approach the tavern and peer through a window. Inside, you see several patrons drinking.\n"
@@ -930,6 +1002,7 @@ scenes = {
             "name": "Cultist Group",
             "hp": 50,
             "damage": 12,
+            "dodge": 10
         },
         "alive": True,
         "choices": {
@@ -949,6 +1022,7 @@ scenes = {
             "name": "Cultist Group",
             "hp": 50,
             "damage": 12,
+            "dodge": 10
         },
         "alive": True,
         "choices": {
