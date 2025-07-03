@@ -30,10 +30,7 @@ def main_menu():
         clear_screen()
         reset_all_alive_flags(scenes)
 
-        print("Welcome to Project Icarus!\n")
-        print("This is a text-based adventure game where you can explore, fight enemies, and collect items.")
-        print("When starting a new run, all progress will be reset while a new game let's you start with your current inventory.")
-        print("If this is your first time playing we recommend you read the basic command list.\n")
+        print("Welcome to Project Icarus!")
         print("1. Start Game")
         print("2. Basic Command List")
         print("3. Start New Run")
@@ -299,7 +296,55 @@ def check_choice_requirements(choice, scene_name):
                 return False
     return True
 
-def mant_minigame():
+
+# ============================================================================
+# MINIGAMES
+# ============================================================================
+
+
+def play_dice_poker():
+    def roll_dice():
+        return [randint(1, 6) for _ in range(5)]
+
+    # Funktion til at evaluere en hånd og give en beskrivelse
+    def evaluate_hand(dice):
+        counts = Counter(dice)          # Tæller forekomster af hver terningværdi
+        values = list(counts.values())  # Udtrækker antallet som en liste
+
+        if 5 in values:
+            return "Five of a kind"
+        elif 4 in values:
+            return "Four of a kind"
+        elif sorted(values) == [2, 3]:
+            return "Full house"
+        elif 3 in values:
+            return "Three of a kind"
+        elif values.count(2) == 2:
+            return "Two pairs"
+        elif 2 in values:
+            return "One pair"
+        else:
+            return "High dice"
+
+    print("Dice Poker Begins!")
+
+    player = roll_dice()
+    opponent = roll_dice()
+
+    # Viser spillerens og modstanderens kast og evaluering
+    sleep(1) #venter 1 sek for spænding
+    print(f"Opponent roll: {opponent} → {evaluate_hand(opponent)}")
+    sleep(1)
+    print(".")
+    sleep(1)
+    print(".")
+    sleep(1)
+    print(f"Your roll: {player} → {evaluate_hand(player)}")
+
+
+
+
+def mant_minigame(): #minigame1
     npcpick = ""
     pick = ""
     score = 0
@@ -504,7 +549,13 @@ def play_game():
                 else:
                     break 
 
-        
+        if scene.get("minigame") and scene.get("alive", True):
+            if scene.get("alive") == True:
+                minigame_type = scene.get("minigame_type")
+                if minigame_type == "rps":
+                    mant_minigame()  #play rock paper scissor
+                elif minigame_type == "dice_poker":
+                    play_dice_poker() #play dice poker
         # Show choices:
         print("Available choices:")
         for choice in scene["choices"].keys():
