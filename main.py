@@ -4,10 +4,12 @@ from items import items
 import os
 from time import sleep, time
 from random import randint
-
+import sys     # Import sys for system exit
 import pygame  # Import pygame for audio playback
 
 # Initialize the pygame mixer for audio (do this once at the start)
+pygame.init()
+
 pygame.mixer.init()
 
 # Load your main menu music file here (make sure the file is in your project folder)
@@ -30,10 +32,52 @@ player_name = None
 # UTILITY FUNCTIONS
 # ============================================================================
 
+def main_menu_graphics():
+    pygame.init()
+    
+    screen_width = 800
+    screen_height = 600
+    screen = pygame.display.set_mode((screen_width, screen_height))
+    pygame.display.set_caption("Project Icarus - Main Menu")
+
+    # Load pixel art and scale it
+    pixel_art = pygame.image.load("main.menu.png").convert_alpha()
+    scaled_art = pygame.transform.scale(pixel_art, (256, 256))
+
+    font = pygame.font.SysFont(None, 48)
+    menu_text = font.render("Press Enter to Start", True, (255, 255, 255))
+
+    clock = pygame.time.Clock()
+    
+    running = True
+    while running:
+        screen.fill((0, 0, 0))  # Fill background with black
+        
+        # Draw pixel art and text
+        screen.blit(scaled_art, (screen_width//2 - 128, 100))
+        screen.blit(menu_text, (screen_width//2 - menu_text.get_width()//2, 400))
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    running = False  # Continue to game
+
+        clock.tick(60)
+
+    pygame.quit()
+
 def main_menu():
-    # Start playing the menu music on loop when main menu loads
+        # Start playing the menu music on loop when main menu loads
     pygame.mixer.music.play(-1)  # -1 means loop indefinitely
     
+    #Shows graphics to main menu
+    main_menu_graphics()
+   
     while True:  # Add loop to keep returning to menu
         reset_game_state()  # Reset enemies and player each time menu is displayed
         clear_screen()
@@ -82,7 +126,8 @@ def main_menu():
             
         elif choice == "0":
             print("Thank you for playing! Goodbye!")
-            pygame.mixer.music.stop()  # Stop music on exit
+            if pygame.mixer.get_init():
+                pygame.mixer.music.stop()  # Stop music on exit
             exit(0)
         else:
             print("\033[31mInvalid choice, please try again.\033[0m")
