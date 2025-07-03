@@ -1,3 +1,6 @@
 /__pycache__
 /.vs
 /.github
+/build
+/dist
+main.spec
