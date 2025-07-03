@@ -327,40 +327,60 @@ def play_dice_poker():
     def roll_dice():
         return [randint(1, 6) for _ in range(5)]
 
-    # Funktion til at evaluere en hånd og give en beskrivelse
     def evaluate_hand(dice):
-        counts = Counter(dice)          # Tæller forekomster af hver terningværdi
-        values = list(counts.values())  # Udtrækker antallet som en liste
+        counts = Counter(dice)
+        values = list(counts.values())
 
         if 5 in values:
-            return "Five of a kind"
+            return "Five of a kind", 7
         elif 4 in values:
-            return "Four of a kind"
+            return "Four of a kind", 6
         elif sorted(values) == [2, 3]:
-            return "Full house"
+            return "Full house", 5
         elif 3 in values:
-            return "Three of a kind"
+            return "Three of a kind", 4
         elif values.count(2) == 2:
-            return "Two pairs"
+            return "Two pairs", 3
         elif 2 in values:
-            return "One pair"
+            return "One pair", 2
         else:
-            return "High dice"
+            return "High dice", 1
+
+    def hand_score(dice):
+        # Higher total sum helps break ties if needed
+        return sum(dice)
 
     print("Dice Poker Begins!")
 
     player = roll_dice()
     opponent = roll_dice()
 
-    # Viser spillerens og modstanderens kast og evaluering
-    sleep(1) #venter 1 sek for spænding
-    print(f"Opponent roll: {opponent} → {evaluate_hand(opponent)}")
+    sleep(1)
+    opponent_hand, opponent_rank = evaluate_hand(opponent)
+    print(f"Opponent roll: {opponent} → {opponent_hand}")
     sleep(1)
     print(".")
     sleep(1)
     print(".")
     sleep(1)
-    print(f"Your roll: {player} → {evaluate_hand(player)}")
+    player_hand, player_rank = evaluate_hand(player)
+    print(f"Your roll: {player} → {player_hand}")
+
+    # Decide the winner
+    if player_rank > opponent_rank:
+        print("\nYou win! Your hand is stronger.")
+    elif player_rank < opponent_rank:
+        print("\nYou lose! Opponent's hand is stronger.")
+    else:
+        # Same rank: use sum of dice to break tie
+        player_sum = hand_score(player)
+        opponent_sum = hand_score(opponent)
+        if player_sum > opponent_sum:
+            print("\nYou win! Tie breaker by highest dice sum.")
+        elif player_sum < opponent_sum:
+            print("\nYou lose! Opponent wins by highest dice sum.")
+        else:
+            print("\nIt's a draw! Both hands are equally strong.")
 
 
 
