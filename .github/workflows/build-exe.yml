@@ -1,14 +1,21 @@
-name: Build and Release Executable
+name: Simple Release
 
 on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for release (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:  # Allow manual triggering
+
+permissions:
+  contents: write
+  actions: read
 
 jobs:
-  build:
+  build-and-release:
     runs-on: windows-latest
     
     steps:
@@ -23,45 +30,59 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install pygame pyinstaller
         
-    - name: Build executable with PyInstaller
+    - name: Build executable
       run: |
         python -m PyInstaller --onefile --add-data "menu_music.mp3;." --name "Project-Icarus" main.py
         
-    - name: Upload executable artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: Project-Icarus-Windows
-        path: dist/Project-Icarus.exe
+    - name: Check if executable exists
+      run: |
+        if (Test-Path "dist/Project-Icarus.exe") {
+          Write-Host "✅ Executable created successfully"
+          $size = (Get-Item "dist/Project-Icarus.exe").length
+          Write-Host "📦 Executable size: $([math]::Round($size/1MB, 2)) MB"
+        } else {
+          Write-Host "❌ Executable not found"
+          exit 1
+        }
         
-    - name: Create Release (on main branch push)
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: softprops/action-gh-release@v1
+    - name: Create Release
+      if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      uses: softprops/action-gh-release@v2
       with:
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }}
+        tag_name: ${{ github.event.inputs.tag_name || format('auto-v{0}', github.run_number) }}
+        name: Project Icarus ${{ github.event.inputs.tag_name || format('Auto Release {0}', github.run_number) }}
         body: |
           🎮 **Project Icarus - Text Adventure Game**
           
-          Automatic release created from commit: ${{ github.sha }}
+          **Automatic Release**
+          - Built from commit: ${{ github.sha }}
+          - Single executable with all dependencies included
           
-          **What's New:**
-          - Latest changes from main branch
-          - Single executable file with bundled music
-          
-          **How to Run:**
+          **How to Play:**
           1. Download `Project-Icarus.exe`
-          2. Double-click to run the game
-          3. No additional files or Python installation required!
+          2. Double-click to run
+          3. No Python or additional software required!
+          
+          **Features:**
+          - Interactive text-based adventure
+          - Combat system with dice mechanics
+          - Inventory management
+          - Speedrun timer
+          - Background music
+          - Mini-games (Rock Paper Scissors, Dice Poker)
           
           **System Requirements:**
-          - Windows 10/11
-          - No additional dependencies needed
+          - Windows 10/11 (64-bit)
           
-        files: |
-          dist/Project-Icarus.exe
+        files: dist/Project-Icarus.exe
         draft: false
         prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Upload artifact (always)
+      uses: actions/upload-artifact@v4
+      with:
+        name: Project-Icarus-${{ github.sha }}
+        path: dist/Project-Icarus.exe
+        retention-days: 30
