@@ -314,6 +314,7 @@ scenes = {
         "choices": {
             "sore losers": "BanditFightGame",
         },
+        "alive": True,
         "minigame": True,
         "minigame_type": "rps",
     },
@@ -593,6 +594,7 @@ scenes = {
             "You nod and take a seat at his table. He explains the rules of the game, which involve rolling dice to match certain numbers.\n"
             "You both roll, and the tension in the air is palpable as you try to outsmart each other.\n"
         ),
+        "alive": True,
         "minigame": True,
         "minigame_type": "dice_poker",
         "choices": {
