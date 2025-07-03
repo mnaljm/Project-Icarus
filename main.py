@@ -296,7 +296,18 @@ def check_choice_requirements(choice, scene_name):
                 return False
     return True
 
-def mant_minigame():
+
+# ============================================================================
+# MINIGAMES
+# ============================================================================
+
+
+
+
+
+
+
+def mant_minigame(): #minigame1
     npcpick = ""
     pick = ""
     score = 0
