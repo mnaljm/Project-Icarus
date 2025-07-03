@@ -572,7 +572,7 @@ scenes = {
             "ask for a room for the night": "TownRoom",
             "order food and listen to conversations": "TownIntelGathering",
             "ask the innkeeper about local news": "TownNews",
-            "You see a man in the corner with a set of dice, he seems to be looking for a game": "TownDiceGame",
+            "Go play some dice, with the sketchy man in the corner": "TownDiceGame",
         },
     },
 
