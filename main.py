@@ -5,6 +5,14 @@ import os
 from time import sleep, time
 from random import randint
 
+import pygame  # Import pygame for audio playback
+
+# Initialize the pygame mixer for audio (do this once at the start)
+pygame.mixer.init()
+
+# Load your main menu music file here (make sure the file is in your project folder)
+pygame.mixer.music.load("menu_music.mp3")
+
 # PLAYER DATA
 player = {
     "hp": 100,
@@ -18,12 +26,14 @@ speedrun_start_time = None
 personal_best = None  # Store only the current session's personal best
 player_name = None
 
-# ============================================================================
+# ============================================================================ 
 # UTILITY FUNCTIONS
 # ============================================================================
 
 def main_menu():
-    # Display the main menu and wait for user input
+    # Start playing the menu music on loop when main menu loads
+    pygame.mixer.music.play(-1)  # -1 means loop indefinitely
+    
     while True:  # Add loop to keep returning to menu
         reset_game_state()  # Reset enemies and player each time menu is displayed
         clear_screen()
@@ -39,8 +49,12 @@ def main_menu():
         choice = input("Enter your choice: ").strip()
         
         if choice == "1":
+            # Stop menu music before starting the game
+            pygame.mixer.music.stop()
             play_game()
-            # After play_game() returns, loop back to menu
+            # After play_game() returns, loop back to menu, music will restart
+            pygame.mixer.music.play(-1)
+            
         elif choice == "2":
             clear_screen()
             print("Basic Commands:")
@@ -50,18 +64,25 @@ def main_menu():
             print("- attack: Engage in combat with an enemy")
             input("\nPress Enter to return to the main menu...")
             # Loop will continue to show menu again
+            
         elif choice == "3":
+            # Stop menu music before starting a new run
+            pygame.mixer.music.stop()
             clear_screen()
             print("Starting a new run...")
             global player_inventory, player_name
             player_inventory = []
             player_name = None  # Reset player name for new run
             play_game()
-            # After play_game() returns, loop back to menu
+            # After play_game() returns, loop back to menu, music restarts
+            pygame.mixer.music.play(-1)
+            
         elif choice == "4":
             show_speedrun_leaderboard()
+            
         elif choice == "0":
             print("Thank you for playing! Goodbye!")
+            pygame.mixer.music.stop()  # Stop music on exit
             exit(0)
         else:
             print("\033[31mInvalid choice, please try again.\033[0m")
