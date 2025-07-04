@@ -1,4 +1,4 @@
-name: Simple Release
+name: Morten Release
 
 on:
   workflow_dispatch:
