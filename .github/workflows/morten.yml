@@ -1,4 +1,4 @@
-name: Morten Release
+name: Morten Release Branch
 
 on:
   workflow_dispatch:
