@@ -66,7 +66,8 @@ def main_menu_graphics():
     pygame.display.set_caption("Project Icarus - Main Menu")
 
     # Load pixel art and scale it
-    pixel_art = pygame.image.load("main.menu.png").convert_alpha()
+    pixel_art_path = resource_path("main.menu.png")
+    pixel_art = pygame.image.load(pixel_art_path).convert_alpha()
     scaled_art = pygame.transform.scale(pixel_art, (256, 256))
 
     font = pygame.font.SysFont(None, 48)
@@ -411,44 +412,44 @@ def play_dice_poker():
     # Nested function to evaluate a hand and assign a ranking
     def evaluate_hand(dice):
         counts = Counter(dice)               # Count how many times each number appears in the roll
-    values = list(counts.values())       # Get just the frequency counts (e.g., [2,2,1] for two pairs)
-    sorted_dice = sorted(dice)           # Sort dice to make straight detection easier
+        values = list(counts.values())       # Get just the frequency counts (e.g., [2,2,1] for two pairs)
+        sorted_dice = sorted(dice)           # Sort dice to make straight detection easier
 
-    # Check for Large Straight (2-3-4-5-6)
-    if sorted_dice == [2, 3, 4, 5, 6]:
-        return "Large straight", 7     # Rank slightly below Five of a Kind
+        # Check for Large Straight (2-3-4-5-6)
+        if sorted_dice == [2, 3, 4, 5, 6]:
+            return "Large straight", 7     # Rank slightly below Five of a Kind
 
-    #  Check for Small Straight (1-2-3-4-5)
-    elif sorted_dice == [1, 2, 3, 4, 5]:
-        return "Small straight", 6     # Slightly below Large Straight
+        #  Check for Small Straight (1-2-3-4-5)
+        elif sorted_dice == [1, 2, 3, 4, 5]:
+            return "Small straight", 6     # Slightly below Large Straight
 
-    #  Check for Five of a Kind (all dice the same)
-    elif 5 in values:
-        return "Five of a kind", 8
+        #  Check for Five of a Kind (all dice the same)
+        elif 5 in values:
+            return "Five of a kind", 8
 
-    #  Check for Four of a Kind
-    elif 4 in values:
-        return "Four of a kind", 6
+        #  Check for Four of a Kind
+        elif 4 in values:
+            return "Four of a kind", 6
 
-    #  Check for Full House (Three of a kind + a Pair)
-    elif sorted(values) == [2, 3]:
-        return "Full house", 5
+        #  Check for Full House (Three of a kind + a Pair)
+        elif sorted(values) == [2, 3]:
+            return "Full house", 5
 
-    #  Check for Three of a Kind
-    elif 3 in values:
-        return "Three of a kind", 4
+        #  Check for Three of a Kind
+        elif 3 in values:
+            return "Three of a kind", 4
 
-    #  Check for Two Pairs
-    elif values.count(2) == 2:
-        return "Two pairs", 3
+        #  Check for Two Pairs
+        elif values.count(2) == 2:
+            return "Two pairs", 3
 
-    #  Check for One Pair
-    elif 2 in values:
-        return "One pair", 2
+        #  Check for One Pair
+        elif 2 in values:
+            return "One pair", 2
 
-    #  Otherwise, it's just a High Dice hand
-    else:
-        return "High dice", 1
+        #  Otherwise, it's just a High Dice hand
+        else:
+            return "High dice", 1
 
     # Nested function to calculate the total value of a hand (used to break ties)
     def hand_score(dice):
