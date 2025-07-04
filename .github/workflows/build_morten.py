@@ -51,8 +51,8 @@ jobs:
       if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.event.inputs.tag_name || format('auto-v{0}', github.run_number) }}
-        name: Project Icarus ${{ github.event.inputs.tag_name || format('Auto Release {0}', github.run_number) }}
+        tag_name: ${{ github.event.inputs.tag_name || format('morten-v{0}', github.run_number) }}
+        name: Project Icarus ${{ github.event.inputs.tag_name || format('Morten Release {0}', github.run_number) }}
         body: |
           🎮 **Project Icarus - Text Adventure Game**
           
