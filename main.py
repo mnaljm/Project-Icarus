@@ -86,7 +86,7 @@ def main_menu_graphics():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                pygame.display.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -94,7 +94,7 @@ def main_menu_graphics():
 
         clock.tick(60)
 
-    pygame.quit()
+    pygame.display.quit()
 
 def main_menu():
         # Start playing the menu music on loop when main menu loads
@@ -404,63 +404,88 @@ def check_choice_requirements(choice, scene_name):
 
 
 def play_dice_poker():
+    # Nested function to simulate rolling five six-sided dice
     def roll_dice():
-        return [randint(1, 6) for _ in range(5)]
+        return [randint(1, 6) for _ in range(5)]  # Returns a list of 5 random numbers between 1 and 6
 
+    # Nested function to evaluate a hand and assign a ranking
     def evaluate_hand(dice):
-        counts = Counter(dice)
-        values = list(counts.values())
+        counts = Counter(dice)               # Count how many times each number appears in the roll
+    values = list(counts.values())       # Get just the frequency counts (e.g., [2,2,1] for two pairs)
+    sorted_dice = sorted(dice)           # Sort dice to make straight detection easier
 
-        if 5 in values:
-            return "Five of a kind", 7
-        elif 4 in values:
-            return "Four of a kind", 6
-        elif sorted(values) == [2, 3]:
-            return "Full house", 5
-        elif 3 in values:
-            return "Three of a kind", 4
-        elif values.count(2) == 2:
-            return "Two pairs", 3
-        elif 2 in values:
-            return "One pair", 2
-        else:
-            return "High dice", 1
+    # Check for Large Straight (2-3-4-5-6)
+    if sorted_dice == [2, 3, 4, 5, 6]:
+        return "Large straight", 7     # Rank slightly below Five of a Kind
 
+    #  Check for Small Straight (1-2-3-4-5)
+    elif sorted_dice == [1, 2, 3, 4, 5]:
+        return "Small straight", 6     # Slightly below Large Straight
+
+    #  Check for Five of a Kind (all dice the same)
+    elif 5 in values:
+        return "Five of a kind", 8
+
+    #  Check for Four of a Kind
+    elif 4 in values:
+        return "Four of a kind", 6
+
+    #  Check for Full House (Three of a kind + a Pair)
+    elif sorted(values) == [2, 3]:
+        return "Full house", 5
+
+    #  Check for Three of a Kind
+    elif 3 in values:
+        return "Three of a kind", 4
+
+    #  Check for Two Pairs
+    elif values.count(2) == 2:
+        return "Two pairs", 3
+
+    #  Check for One Pair
+    elif 2 in values:
+        return "One pair", 2
+
+    #  Otherwise, it's just a High Dice hand
+    else:
+        return "High dice", 1
+
+    # Nested function to calculate the total value of a hand (used to break ties)
     def hand_score(dice):
-        # Higher total sum helps break ties if needed
-        return sum(dice)
+        return sum(dice)                     # Sum of all dice values
 
-    print("Dice Poker Begins!")
+    print("Dice Poker Begins!")              # Inform the player that the game is starting
 
-    player = roll_dice()
-    opponent = roll_dice()
+    player = roll_dice()                     # Roll dice for the player
+    opponent = roll_dice()                   # Roll dice for the opponent
 
-    sleep(1)
-    opponent_hand, opponent_rank = evaluate_hand(opponent)
-    print(f"Opponent roll: {opponent} → {opponent_hand}")
+    sleep(1)                                                # Pause for dramatic effect
+    opponent_hand, opponent_rank = evaluate_hand(opponent)  # Evaluate the opponent's hand
+    print(f"Opponent roll: {opponent} → {opponent_hand}")   # Display opponent's dice and hand name
+    sleep(1)                                                # Pause again
+    print(".")                                              # Show ellipsis for suspense
     sleep(1)
     print(".")
     sleep(1)
-    print(".")
-    sleep(1)
-    player_hand, player_rank = evaluate_hand(player)
-    print(f"Your roll: {player} → {player_hand}")
-
+    player_hand, player_rank = evaluate_hand(player)        # Evaluate the player's hand
+    print(f"Your roll: {player} → {player_hand}")           # Display player's dice and hand name
     # Decide the winner
+        # Decide the winner
     if player_rank > opponent_rank:
-        print("\nYou win! Your hand is stronger.")
+        print("\nYou win! Your hand is stronger.")  # Player has a better-ranked hand (e.g. full house beats pair)
     elif player_rank < opponent_rank:
-        print("\nYou lose! Opponent's hand is stronger.")
+        print("\nYou lose! Opponent's hand is stronger.")  # Opponent has a better-ranked hand
     else:
         # Same rank: use sum of dice to break tie
-        player_sum = hand_score(player)
-        opponent_sum = hand_score(opponent)
+        player_sum = hand_score(player)            # Calculate total value of player's dice
+        opponent_sum = hand_score(opponent)        # Calculate total value of opponent's dice
+
         if player_sum > opponent_sum:
-            print("\nYou win! Tie breaker by highest dice sum.")
+            print("\nYou win! Tie breaker by highest dice sum.")  # Player wins by higher total value
         elif player_sum < opponent_sum:
-            print("\nYou lose! Opponent wins by highest dice sum.")
+            print("\nYou lose! Opponent wins by highest dice sum.")  # Opponent wins by higher total value
         else:
-            print("\nIt's a draw! Both hands are equally strong.")
+            print("\nIt's a draw! Both hands are equally strong.")  # Same rank and same total = perfect draw
 
 
 
