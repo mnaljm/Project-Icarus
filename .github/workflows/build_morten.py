@@ -1,0 +1,88 @@
+name: Simple Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for release (e.g., v1.0.0)'
+        required: true
+        default: 'MORTEN'
+  push:
+    branches: [ Morten-dev ]
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pygame pyinstaller
+        
+    - name: Build executable
+      run: |
+        python -m PyInstaller --onefile --add-data "menu_music.mp3;." --name "Project-Icarus" main.py
+        
+    - name: Check if executable exists
+      run: |
+        if (Test-Path "dist/Project-Icarus.exe") {
+          Write-Host "✅ Executable created successfully"
+          $size = (Get-Item "dist/Project-Icarus.exe").length
+          Write-Host "📦 Executable size: $([math]::Round($size/1MB, 2)) MB"
+        } else {
+          Write-Host "❌ Executable not found"
+          exit 1
+        }
+        
+    - name: Create Release
+      if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.event.inputs.tag_name || format('auto-v{0}', github.run_number) }}
+        name: Project Icarus ${{ github.event.inputs.tag_name || format('Auto Release {0}', github.run_number) }}
+        body: |
+          🎮 **Project Icarus - Text Adventure Game**
+          
+          **Automatic Release**
+          - Built from commit: ${{ github.sha }}
+          - Single executable with all dependencies included
+          
+          **How to Play:**
+          1. Download `Project-Icarus.exe`
+          2. Double-click to run
+          3. No Python or additional software required!
+          
+          **Features:**
+          - Interactive text-based adventure
+          - Combat system with dice mechanics
+          - Inventory management
+          - Speedrun timer
+          - Background music
+          - Mini-games (Rock Paper Scissors, Dice Poker)
+          
+          **System Requirements:**
+          - Windows 10/11 (64-bit)
+          
+        files: dist/Project-Icarus.exe
+        draft: false
+        prerelease: false
+        
+    - name: Upload artifact (always)
+      uses: actions/upload-artifact@v4
+      with:
+        name: Project-Icarus-${{ github.sha }}
+        path: dist/Project-Icarus.exe
+        retention-days: 30
